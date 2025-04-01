@@ -1,0 +1,189 @@
+basePath: /api/v1
+definitions:
+  dto.User:
+    properties:
+      age:
+        type: integer
+      birthdate:
+        type: string
+      city:
+        type: string
+      email:
+        type: string
+      employment:
+        type: string
+      is_business_owner:
+        type: string
+      month_income:
+        type: integer
+      name:
+        type: string
+      password:
+        type: string
+      phone_number:
+        type: string
+      position_at_work:
+        type: string
+      telegram:
+        type: string
+    required:
+    - age
+    - birthdate
+    - city
+    - email
+    - employment
+    - is_business_owner
+    - month_income
+    - name
+    - password
+    - phone_number
+    - position_at_work
+    - telegram
+    type: object
+  dto.UserLoginInfo:
+    properties:
+      email:
+        type: string
+      password:
+        maxLength: 20
+        type: string
+    required:
+    - email
+    - password
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: ABOBA
+    name: API Support
+  description: This is an API for authentication and authorization.
+  license:
+    name: MIT
+    url: http://opensource.org/licenses/MIT
+  title: API
+  version: "1.0"
+paths:
+  /auth/refresh:
+    post:
+      consumes:
+      - application/json
+      description: Refresh tokens
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Refresh tokens
+      tags:
+      - User
+  /auth/signin:
+    post:
+      consumes:
+      - application/json
+      description: Sign in user
+      parameters:
+      - description: User login info
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UserLoginInfo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Sign in user
+      tags:
+      - User
+  /auth/signup:
+    post:
+      consumes:
+      - application/json
+      description: Sign up user
+      parameters:
+      - description: User to create
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/dto.User'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Sign up user
+      tags:
+      - User
+  /users/me:
+    get:
+      consumes:
+      - application/json
+      description: Get user profile
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get user profile
+      tags:
+      - User
+swagger: "2.0"
