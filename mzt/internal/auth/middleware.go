@@ -2,6 +2,7 @@ package auth
 
 import (
 	"mzt/config"
+	"mzt/internal/auth/dto"
 	"mzt/internal/auth/utils"
 	"net/http"
 	"strings"
@@ -51,7 +52,21 @@ func (m *Middleware) AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		c.Set("user", user)
+		userInfo := &dto.UserInfo{
+			Name:            user.Name,
+			Birthdate:       user.Birthdate,
+			Email:           user.Email,
+			PhoneNumber:     user.PhoneNumber,
+			Telegram:        user.Telegram,
+			City:            user.City,
+			Age:             user.Age,
+			Employment:      user.Employment,
+			IsBusinessOwner: user.IsBusinessOwner,
+			PositionAtWork:  user.PositionAtWork,
+			MonthIncome:     user.MonthIncome,
+		}
+
+		c.Set("user", userInfo)
 
 		c.Next()
 		return

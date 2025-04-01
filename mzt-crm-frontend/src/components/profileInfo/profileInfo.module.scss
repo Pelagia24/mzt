@@ -1,0 +1,5 @@
+.wrapper {
+  color: var(--primary);
+  border-color: rgba(var(--primary), 0.7);
+  @apply surface-card border-round m-4 p-4 shadow-2;
+}

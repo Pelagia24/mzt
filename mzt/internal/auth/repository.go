@@ -39,6 +39,14 @@ func (r *RefreshTokensRepo) GetUserByEmail(email string) (*entity.User, error) {
 	}
 	return &user, nil
 }
+func (r *RefreshTokensRepo) GetUserById(userId uuid.UUID) (*entity.User, error) {
+	var user entity.User
+	err := r.DB.Where("id = ?", userId).First(&user).Error
+	if err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
 
 func (r *RefreshTokensRepo) CreateUser(user *entity.User) error {
 	err := r.DB.Create(&user).Error
@@ -58,8 +66,8 @@ func (r *RefreshTokensRepo) CreateUserJWT(userJWTEntity *entity.UserJWT) error {
 
 func (r *RefreshTokensRepo) UpdateToken(userId uuid.UUID, token string) error {
 	tx := r.DB.Begin()
-	err := tx.Model(&entity.UserJWT{}).Where("user_id = ?", userId).Updates(entity.UserJWT{Key: token}).Error
 
+	err := tx.Model(&entity.UserJWT{}).Where("user_id = ?", userId).Updates(entity.UserJWT{Key: token}).Error
 	if err != nil {
 		tx.Rollback()
 		return err

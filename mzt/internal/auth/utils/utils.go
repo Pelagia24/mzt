@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"errors"
 	"fmt"
 	"mzt/config"
 	"time"
@@ -26,6 +27,9 @@ func ConnectDB(config *config.Config) *gorm.DB {
 }
 
 func GenerateToken(email, secret string, expirationTimeUnix time.Duration) (string, error) {
+	if email == "" {
+		return "", errors.New("Empty email")
+	}
 	claims := jwt.MapClaims{
 		"email": email,
 		"exp":   time.Now().Add(expirationTimeUnix).Unix(),

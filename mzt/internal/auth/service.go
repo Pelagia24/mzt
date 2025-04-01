@@ -113,7 +113,10 @@ func (s *Service) RefreshTokens(cookie string) (string, string, error) {
 		return "", "", err
 	}
 	//TODO better validation token sub and db entry
-	userEntity := userJWTEntity.User
+	userEntity, err := s.repository.GetUserById(userJWTEntity.UserId)
+	if err != nil {
+		return "", "", err
+	}
 
 	access, refresh, err := s.generateTokens(userEntity.Email)
 	if err != nil {
