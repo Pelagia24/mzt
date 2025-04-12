@@ -6,24 +6,63 @@ import (
 	"github.com/google/uuid"
 )
 
-type UserJWT struct {
-	User   User      `gorm:"foreignKey:UserId"`
-	UserId uuid.UUID `gorm:"type:uuid;not null"`
-	Key    string    `gorm:"type:varchar(255);not null"`
+type UserData struct {
+	ID              uint      `gorm:"primaryKey"`
+	UserID          uuid.UUID `gorm:"type:uuid;uniqueIndex:idx_userid_userdata"`
+	Name            string
+	Birthdate       time.Time
+	PhoneNumber     string
+	Telegram        string
+	City            string
+	Age             uint
+	Employment      string
+	IsBusinessOwner string
+	PositionAtWork  string
+	MonthIncome     uint
 }
 
 type User struct {
-	ID              uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();primary_key"`
-	Name            string    `gorm:"type:varchar(255);not null"`
-	Birthdate       time.Time `gorm:"type:timestamp;not null"`
-	Email           string    `gorm:"type:varchar(255);unique;not null"`
-	PhoneNumber     string    `gorm:"type:varchar(255);not null"`
-	Telegram        string    `gorm:"type:varchar(255)"`
-	City            string    `gorm:"type:varchar(255);not null"`
-	Age             uint      `gorm:"not null"`
-	Employment      string    `gorm:"type:varchar(255);not null"`
-	IsBusinessOwner string    `gorm:"type:varchar(255);not null"`
-	PositionAtWork  string    `gorm:"type:varchar(255);not null"`
-	MonthIncome     uint      `gorm:"not null"`
-	PasswordHash    string    `gorm:"type:varchar(255);not null"`
+	ID         uuid.UUID `gorm:"type:uuid;primaryKey"`
+	Email      string    `gorm:"uniqueIndex:idx_email;not null"`
+	PasswdHash string
+
+	Auth     *Auth
+	UserData *UserData
+	Courses  []CourseAssignment
+	// EventRecords []EventAssignment
+}
+
+type Auth struct {
+	ID     uint      `gorm:"primaryKey"`
+	UserID uuid.UUID `gorm:"type:uuid;uniqueIndex:idx_userid_auth"`
+	Key    string    `gorm:"type:varchar(255);not null"`
+}
+
+// Cources
+type Course struct {
+	CourseID uuid.UUID `gorm:"type:uuid;primaryKey"`
+	Title    string
+	Desc     string
+
+	Lessons           []Lesson
+	CourseAssignments []CourseAssignment
+}
+
+type CourseAssignment struct {
+	CaID     uuid.UUID `gorm:"type:uuid;primaryKey"`
+	UserID   uuid.UUID `gorm:"type:uuid;not null"`
+	CourseID uuid.UUID `gorm:"type:uuid;not null"`
+	Progress uint
+
+	User   User   `gorm:"constraint:OnDelete:CASCADE;"`
+	Course Course `gorm:"constraint:OnDelete:CASCADE;"`
+}
+
+type Lesson struct {
+	LessonID   uuid.UUID `gorm:"type:uuid;primaryKey"`
+	CourseID   uuid.UUID `gorm:"type:uuid;not null"`
+	VideoURL   string
+	SummaryURL string
+
+	Course Course `gorm:"constraint:OnDelete:CASCADE;"`
 }

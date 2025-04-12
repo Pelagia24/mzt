@@ -36,11 +36,11 @@ func NewConfig() *Config {
 
 	return &Config{
 		DB: DB{
-			Host:     os.Getenv("DB_HOST"),
-			Port:     os.Getenv("DB_PORT"),
-			User:     os.Getenv("DB_USER"),
-			Name:     os.Getenv("DB_NAME"),
-			Password: os.Getenv("DB_PASSWORD"),
+			Host:     os.Getenv("PGHOST"),
+			Port:     os.Getenv("PGPORT"),
+			User:     os.Getenv("PGUSER"),
+			Name:     os.Getenv("PGDATABASE"),
+			Password: os.Getenv("PGPASSWORD"),
 		},
 		Jwt: Jwt{
 			AccessKey:        os.Getenv("JWT_ACCESS_KEY"),

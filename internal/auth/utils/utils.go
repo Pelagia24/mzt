@@ -3,36 +3,18 @@ package utils
 import (
 	"errors"
 	"fmt"
-	"mzt/config"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
 )
-
-func ConnectDB(config *config.Config) *gorm.DB {
-	connectionString := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=disable",
-		config.DB.Host,
-		config.DB.Port,
-		config.DB.User,
-		config.DB.Name,
-		config.DB.Password)
-
-	postrgresDB, err := gorm.Open(postgres.Open(connectionString), &gorm.Config{})
-	if err != nil {
-		panic("failed to connect database")
-	}
-	return postrgresDB
-}
 
 func GenerateToken(email, secret string, expirationTimeUnix time.Duration) (string, error) {
 	if email == "" {
 		return "", errors.New("Empty email")
 	}
 	claims := jwt.MapClaims{
-		"email": email,
-		"exp":   time.Now().Add(expirationTimeUnix).Unix(),
+		"sub": email,
+		"exp": time.Now().Add(expirationTimeUnix).Unix(),
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)

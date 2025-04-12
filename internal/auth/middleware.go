@@ -12,10 +12,10 @@ import (
 
 type Middleware struct {
 	config *config.Config
-	repo   *RefreshTokensRepo
+	repo   *UserRepo
 }
 
-func NewMiddleware(config *config.Config, repo *RefreshTokensRepo) *Middleware {
+func NewMiddleware(config *config.Config, repo *UserRepo) *Middleware {
 	return &Middleware{
 		config: config,
 		repo:   repo,
@@ -46,24 +46,24 @@ func (m *Middleware) AuthMiddleware() gin.HandlerFunc {
 		}
 
 		//TODO: Implement dto that contains user information
-		user, err := m.repo.GetUserByEmail(sub)
+		user, err := m.repo.GetUserWithDataByEmail(sub)
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 			return
 		}
 
 		userInfo := &dto.UserInfoDto{
-			Name:            user.Name,
-			Birthdate:       user.Birthdate,
+			Name:            user.UserData.Name,
+			Birthdate:       user.UserData.Birthdate,
 			Email:           user.Email,
-			PhoneNumber:     user.PhoneNumber,
-			Telegram:        user.Telegram,
-			City:            user.City,
-			Age:             user.Age,
-			Employment:      user.Employment,
-			IsBusinessOwner: user.IsBusinessOwner,
-			PositionAtWork:  user.PositionAtWork,
-			MonthIncome:     user.MonthIncome,
+			PhoneNumber:     user.UserData.PhoneNumber,
+			Telegram:        user.UserData.Telegram,
+			City:            user.UserData.City,
+			Age:             user.UserData.Age,
+			Employment:      user.UserData.Employment,
+			IsBusinessOwner: user.UserData.IsBusinessOwner,
+			PositionAtWork:  user.UserData.PositionAtWork,
+			MonthIncome:     user.UserData.MonthIncome,
 		}
 
 		c.Set("user", userInfo)

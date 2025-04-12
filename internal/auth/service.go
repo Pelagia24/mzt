@@ -1,38 +1,62 @@
 package auth
 
 import (
+	"errors"
 	"mzt/config"
 	"mzt/internal/auth/dto"
 	"mzt/internal/auth/entity"
 	"mzt/internal/auth/utils"
+	"regexp"
 
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type Service struct {
-	config     *config.Config
-	repository *RefreshTokensRepo
+	config *config.Config
+	repo   *UserRepo
 }
 
-func NewService(config *config.Config, repository *RefreshTokensRepo) *Service {
+func NewService(cfg *config.Config, repo *UserRepo) *Service {
 	return &Service{
-		config:     config,
-		repository: repository,
+		config: cfg,
+		repo:   repo,
 	}
 }
 
 func (s *Service) SignUp(user *dto.RegistrationDto) (string, string, error) {
-	//TODO: validation
+	if !isValidEmail(user.Email) {
+		return "", "", errors.New("Invalid Email")
+	}
+
+	if !isValidPhoneNumber(user.PhoneNumber) {
+		return "", "", errors.New("Invalid Phone Number")
+	}
+
+	if !isValidTelegram(user.Telegram) {
+		return "", "", errors.New("Invalid Telegram")
+	}
+
+	if user.Password != user.ConfirmPassword {
+		return "", "", errors.New("Password and confirmation don't match")
+	}
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return "", "", err
 	}
 
+	userID := uuid.New()
 	userEntity := entity.User{
+		ID:    userID,
+		Email: user.Email,
+		// Role:
+		PasswdHash: string(hashedPassword),
+	}
+	userData := entity.UserData{
+		UserID:          userID,
 		Name:            user.Name,
 		Birthdate:       user.Birthdate,
-		Email:           user.Email,
 		PhoneNumber:     user.PhoneNumber,
 		Telegram:        user.Telegram,
 		City:            user.City,
@@ -41,17 +65,6 @@ func (s *Service) SignUp(user *dto.RegistrationDto) (string, string, error) {
 		IsBusinessOwner: user.IsBusinessOwner,
 		PositionAtWork:  user.PositionAtWork,
 		MonthIncome:     user.MonthIncome,
-		PasswordHash:    string(hashedPassword),
-	}
-
-	err = s.repository.CreateUser(&userEntity)
-	if err != nil {
-		return "", "", err
-	}
-
-	id, err := s.repository.GetInternalIdByEmail(user.Email)
-	if err != nil {
-		return "", "", err
 	}
 
 	access, refresh, err := s.generateTokens(userEntity.Email)
@@ -59,13 +72,12 @@ func (s *Service) SignUp(user *dto.RegistrationDto) (string, string, error) {
 		return "", "", err
 	}
 
-	userJWTEntity := &entity.UserJWT{
-		User:   userEntity,
-		UserId: id,
+	userAuth := entity.Auth{
+		UserID: userID,
 		Key:    refresh,
 	}
 
-	err = s.repository.CreateUserJWT(userJWTEntity)
+	err = s.repo.CreateUser(&userEntity, &userData, &userAuth)
 	if err != nil {
 		return "", "", err
 	}
@@ -73,13 +85,35 @@ func (s *Service) SignUp(user *dto.RegistrationDto) (string, string, error) {
 	return access, refresh, nil
 }
 
-func (s *Service) SignIn(userInfo *dto.LoginDto) (string, string, error) {
-	userEntity, err := s.repository.GetUserByEmail(userInfo.Email)
+func isValidEmail(email string) bool {
+	const emailRegex = `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
+	re := regexp.MustCompile(emailRegex)
+	return re.MatchString(email)
+}
+
+func isValidTelegram(telegram string) bool {
+	const telegramRegex = `^@[A-Za-z0-9_]{5,32}$`
+	re := regexp.MustCompile(telegramRegex)
+	return re.MatchString(telegram)
+}
+
+func isValidPhoneNumber(phone string) bool {
+	const phoneRegex = `^\+?\d{10,15}$`
+	re := regexp.MustCompile(phoneRegex)
+	return re.MatchString(phone)
+}
+
+func (s *Service) SignIn(user *dto.LoginDto) (string, string, error) {
+	if !isValidEmail(user.Email) {
+		return "", "", errors.New("Invalid Email")
+	}
+
+	userEntity, err := s.repo.GetUserByEmail(user.Email)
 	if err != nil {
 		return "", "", err
 	}
 
-	if err := bcrypt.CompareHashAndPassword([]byte(userEntity.PasswordHash), []byte(userInfo.Password)); err != nil {
+	if err := bcrypt.CompareHashAndPassword([]byte(userEntity.PasswdHash), []byte(user.Password)); err != nil {
 		return "", "", err
 	}
 
@@ -88,13 +122,7 @@ func (s *Service) SignIn(userInfo *dto.LoginDto) (string, string, error) {
 		return "", "", err
 	}
 
-	userJWTEntity := &entity.UserJWT{
-		User:   *userEntity,
-		UserId: userEntity.ID,
-		Key:    refresh,
-	}
-
-	err = s.repository.UpdateToken(userJWTEntity.UserId, userJWTEntity.Key)
+	err = s.repo.UpdateToken(userEntity.ID, refresh)
 	if err != nil {
 		return "", "", err
 	}
@@ -103,19 +131,23 @@ func (s *Service) SignIn(userInfo *dto.LoginDto) (string, string, error) {
 }
 
 func (s *Service) RefreshTokens(cookie string) (string, string, error) {
-	_, err := utils.ValidateToken(cookie, s.config.Jwt.RefreshKey)
+	token, err := utils.ValidateToken(cookie, s.config.Jwt.RefreshKey)
+	if err != nil || !token.Valid {
+		return "", "", err
+	}
+
+	sub, err := token.Claims.GetSubject()
+	if err != nil || sub == "" {
+		return "", "", err
+	}
+
+	userEntity, err := s.repo.GetUserWithRefreshByEmail(sub)
 	if err != nil {
 		return "", "", err
 	}
 
-	userJWTEntity, err := s.repository.GetUserJWTByToken(cookie)
-	if err != nil {
-		return "", "", err
-	}
-	//TODO better validation token sub and db entry
-	userEntity, err := s.repository.GetUserById(userJWTEntity.UserId)
-	if err != nil {
-		return "", "", err
+	if userEntity.Auth.Key != cookie {
+		return "", "", errors.New("This refresh token already refreshed")
 	}
 
 	access, refresh, err := s.generateTokens(userEntity.Email)
@@ -123,7 +155,7 @@ func (s *Service) RefreshTokens(cookie string) (string, string, error) {
 		return "", "", err
 	}
 
-	if err := s.repository.UpdateToken(userJWTEntity.UserId, refresh); err != nil {
+	if err := s.repo.UpdateToken(userEntity.ID, refresh); err != nil {
 		return "", "", err
 	}
 
