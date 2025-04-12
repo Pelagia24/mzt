@@ -21,7 +21,7 @@ func NewService(config *config.Config, repository *RefreshTokensRepo) *Service {
 	}
 }
 
-func (s *Service) SignUp(user *dto.User) (string, string, error) {
+func (s *Service) SignUp(user *dto.RegistrationDto) (string, string, error) {
 	//TODO: validation
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
@@ -73,7 +73,7 @@ func (s *Service) SignUp(user *dto.User) (string, string, error) {
 	return access, refresh, nil
 }
 
-func (s *Service) SignIn(userInfo *dto.UserLoginInfo) (string, string, error) {
+func (s *Service) SignIn(userInfo *dto.LoginDto) (string, string, error) {
 	userEntity, err := s.repository.GetUserByEmail(userInfo.Email)
 	if err != nil {
 		return "", "", err

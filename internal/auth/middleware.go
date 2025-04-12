@@ -52,7 +52,7 @@ func (m *Middleware) AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		userInfo := &dto.UserInfo{
+		userInfo := &dto.UserInfoDto{
 			Name:            user.Name,
 			Birthdate:       user.Birthdate,
 			Email:           user.Email,

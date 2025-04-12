@@ -84,7 +84,7 @@ func (r *Router) Me(c *gin.Context) {
 // @Failure 500 {object} map[string]interface{}
 // @Router /auth/signin [post]
 func (r *Router) SignIn(c *gin.Context) {
-	var payload dto.UserLoginInfo
+	var payload dto.LoginDto
 	if err := c.ShouldBindJSON(&payload); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -117,7 +117,7 @@ func (r *Router) SignIn(c *gin.Context) {
 // @Failure 500 {object} map[string]interface{}
 // @Router /auth/signup [post]
 func (r *Router) SignUp(c *gin.Context) {
-	var payload dto.User
+	var payload dto.RegistrationDto
 	if err := c.ShouldBindJSON(&payload); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

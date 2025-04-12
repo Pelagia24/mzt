@@ -2,7 +2,7 @@ package dto
 
 import "time"
 
-type User struct {
+type RegistrationDto struct {
 	Name            string    `json:"name" binding:"required"`
 	Birthdate       time.Time `json:"birthdate" binding:"required"`
 	Email           string    `json:"email" binding:"required"`
@@ -15,10 +15,10 @@ type User struct {
 	PositionAtWork  string    `json:"position_at_work" binding:"required"`
 	MonthIncome     uint      `json:"month_income" binding:"required"`
 	Password        string    `json:"password" binding:"required"`
-	//ConfirmPassword string    `json:"confirm_password"`
+	ConfirmPassword string    `json:"confirm_password"`
 }
 
-type UserInfo struct {
+type UserInfoDto struct {
 	Name            string    `json:"name" binding:"required"`
 	Birthdate       time.Time `json:"birthdate" binding:"required"`
 	Email           string    `json:"email" binding:"required"`
@@ -32,7 +32,7 @@ type UserInfo struct {
 	MonthIncome     uint      `json:"month_income" binding:"required"`
 }
 
-type UserLoginInfo struct {
+type LoginDto struct {
 	Email    string `json:"email" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }
