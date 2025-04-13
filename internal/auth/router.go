@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
@@ -40,14 +41,123 @@ func NewRouter(config *config.Config, handler *gin.Engine, service *Service, MW 
 		authHandler.POST("/refresh", r.Refresh)
 	}
 
-	secureHandler := handler.Group("/api/v1/users")
-	secureHandler.Use(MW.AuthMiddleware())
+	usersGroup := handler.Group("/users")
+
+	usersGroup.Use(MW.AuthMiddleware())
 	{
-		secureHandler.GET("/me", r.Me)
-		//secureHandler.POST("/logout", r.Logout)
+		usersGroup.GET("/me", r.Me)
+
+		adminGroup := usersGroup.Group("")
+		adminGroup.GET("/", r.GetUsers)
+		adminGroup.Use(MW.AdminVerificationMiddleware()).Any("/:user_id", r.Users)
+		adminGroup.GET("/:user_id/role", r.Role)
 	}
+
 	//handler.RunTLS(":443", "cert.pem", "key.pem")
 	return r
+}
+
+func (r *Router) GetUsers(c *gin.Context) {
+	users, err := r.service.GetUsers()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Can't get users"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "User infos",
+		"users":   users,
+	})
+}
+
+func (r *Router) Role(c *gin.Context) {
+	userId := c.Param("user_id")
+	id, err := uuid.Parse(userId)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+		return
+	}
+	role, err := r.service.Role(id)
+	if err != nil || role == "" {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": "Can't get user role"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Role of user",
+		"role":    role,
+	})
+}
+
+func (r *Router) Users(c *gin.Context) {
+	userId := c.Param("user_id")
+	id, err := uuid.Parse(userId)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+		return
+	}
+
+	switch c.Request.Method {
+	case http.MethodGet:
+		user, err := r.service.GetUser(id)
+		if err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Can't get user"})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{
+			"message": "User detailedinfo",
+			"user":    user,
+		})
+
+	case http.MethodDelete:
+		self, ok := c.Get("self")
+		if !ok {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Unknown sender"})
+			return
+		}
+		casted, ok := self.(string)
+		if !ok {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Unknown sender"})
+		}
+
+		selfId, err := uuid.Parse(casted)
+		if err != nil {
+			c.JSON(http.StatusUnprocessableEntity, gin.H{"error": "Can't parse user id"})
+			return
+		}
+
+		if id == selfId {
+			c.JSON(http.StatusUnprocessableEntity, gin.H{"error": "Can't delete self"})
+			return
+		}
+
+		err = r.service.DeleteUser(id)
+		if err != nil {
+			c.JSON(http.StatusUnprocessableEntity, gin.H{"error": "Can't delete user"})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{"message": "Deleted user with success"})
+	case http.MethodPut:
+		var payload dto.UpdateUserDto
+		if err := c.ShouldBindJSON(&payload); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		err := r.service.UpdateUser(id, &payload)
+		if err != nil {
+			c.JSON(http.StatusUnprocessableEntity, gin.H{"error": "Can't update user"})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{"message": "Updated user with success"})
+
+	default:
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid http method"})
+		return
+	}
+
 }
 
 // @Summary Get user profile

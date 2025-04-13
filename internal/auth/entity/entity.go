@@ -25,10 +25,11 @@ type User struct {
 	ID         uuid.UUID `gorm:"type:uuid;primaryKey"`
 	Email      string    `gorm:"uniqueIndex:idx_email;not null"`
 	PasswdHash string
-
-	Auth     *Auth
-	UserData *UserData
-	Courses  []CourseAssignment
+	//TODO make role an entity
+	Role              int
+	Auth              *Auth
+	UserData          *UserData
+	CourseAssignments []CourseAssignment
 	// EventRecords []EventAssignment
 }
 
@@ -38,7 +39,7 @@ type Auth struct {
 	Key    string    `gorm:"type:varchar(255);not null"`
 }
 
-// Cources
+// Courses
 type Course struct {
 	CourseID uuid.UUID `gorm:"type:uuid;primaryKey"`
 	Title    string

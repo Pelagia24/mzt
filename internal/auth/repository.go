@@ -31,9 +31,28 @@ func NewRefreshTokensRepo(cfg *config.Config) *UserRepo {
 	}
 }
 
+func (r *UserRepo) GetUsers() ([]entity.User, error) {
+	var users []entity.User
+	err := r.DB.Preload("UserData").Find(&users).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return users, nil
+}
+
 func (r *UserRepo) GetUserByEmail(email string) (*entity.User, error) {
 	var user entity.User
 	err := r.DB.Where("email = ?", email).First(&user).Error
+	if err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+
+func (r *UserRepo) GetUserById(userId uuid.UUID) (*entity.User, error) {
+	var user entity.User
+	err := r.DB.Where("id = ?", userId).First(&user).Error
 	if err != nil {
 		return nil, err
 	}
@@ -67,32 +86,61 @@ func (r *UserRepo) CreateUser(user *entity.User, userData *entity.UserData, auth
 	return tx.Commit().Error
 }
 
-func (r *UserRepo) GetUserWithDataByEmail(email string) (*entity.User, error) {
+func (r *UserRepo) DeleteUser(userId uuid.UUID) error {
+	result := r.DB.Delete(&entity.User{}, userId)
+	return result.Error
+}
+
+func (r *UserRepo) UpdateUser(userId uuid.UUID, updated *entity.UserData) error {
+	tx := r.DB.Begin()
+	if tx.Error != nil {
+		return tx.Error
+	}
+	var data entity.UserData
+	if err := tx.Where("user_id = ?", userId).First(&data).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	updated.ID = data.ID
+	updated.UserID = data.UserID
+
+	data = *updated
+
+	if err := tx.Save(&data).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit().Error
+}
+
+func (r *UserRepo) GetUserWithDataById(userId uuid.UUID) (*entity.User, error) {
 	var user entity.User
-	err := r.DB.Preload("UserData").First(&user, "email = ?", email).Error
+	err := r.DB.Preload("UserData").First(&user, "id = ?", userId).Error
 	if err != nil {
 		return nil, err
 	}
 	return &user, nil
 }
 
-func (r *UserRepo) GetUserWithRefreshByEmail(email string) (*entity.User, error) {
+func (r *UserRepo) GetUserWithRefreshById(userId uuid.UUID) (*entity.User, error) {
 	var user entity.User
-	err := r.DB.Preload("Auth").First(&user, "email = ?", email).Error
+	err := r.DB.Preload("Auth").First(&user, "id = ?", userId).Error
 	if err != nil {
 		return nil, err
 	}
 	return &user, nil
 }
 
-func (r *UserRepo) UpdateToken(userID uuid.UUID, token string) error {
+func (r *UserRepo) UpdateToken(userId uuid.UUID, token string) error {
 	tx := r.DB.Begin()
 	if tx.Error != nil {
 		return tx.Error
 	}
 
 	var auth entity.Auth
-	if err := tx.Where("user_id = ?", userID).First(&auth).Error; err != nil {
+	if err := tx.Where("user_id = ?", userId).First(&auth).Error; err != nil {
 		tx.Rollback()
 		return err
 	}
