@@ -57,7 +57,7 @@ func Migrate(r *auth.UserRepo) {
 	var user entity.User
 	err = r.DB.Where("id = ?", userId).First(&user).Error
 	if err != nil {
-		if !errors.Is(err, gorm.ErrRecordNotFound) {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			err = r.CreateUser(userEntity, userData, auth)
 			if err != nil {
 				panic(err)
