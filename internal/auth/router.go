@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"fmt"
 	"mzt/config"
 	_ "mzt/docs"
 	"mzt/internal/auth/dto"
@@ -143,21 +142,10 @@ func (r *Router) Users(c *gin.Context) {
 			c.JSON(http.StatusNotFound, gin.H{"error": "Unknown sender"})
 			return
 		}
-		fmt.Println(self)
 
-		casted, ok := self.(string)
-
-		fmt.Println(self)
-
+		selfId, ok := self.(uuid.UUID)
 		if !ok {
 			c.JSON(http.StatusNotFound, gin.H{"error": "Unknown sender"})
-		}
-
-		selfId, err := uuid.Parse(casted)
-		fmt.Println(selfId)
-		if err != nil {
-			c.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
-			// c.JSON(http.StatusUnprocessableEntity, gin.H{"error": "Can't parse user id"})
 			return
 		}
 
