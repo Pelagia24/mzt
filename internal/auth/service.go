@@ -48,9 +48,9 @@ func (s *Service) SignUp(user *dto.RegistrationDto) (string, string, error) {
 		return "", "", errors.New("Invalid Telegram")
 	}
 
-	if user.Password != user.ConfirmPassword {
-		return "", "", errors.New("Password and confirmation don't match")
-	}
+	// if user.Password != user.ConfirmPassword {
+	// 	return "", "", errors.New("Password and confirmation don't match")
+	// }
 
 	//TODO more validation
 

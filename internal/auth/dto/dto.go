@@ -20,8 +20,8 @@ type RegistrationDto struct {
 	PositionAtWork  string `json:"position_at_work" binding:"required"`
 	MonthIncome     uint   `json:"month_income"`
 	// MonthIncome     uint      `json:"month_income" binding:"required"`
-	Password        string `json:"password" binding:"required"`
-	ConfirmPassword string `json:"confirm_password" binding:"required"`
+	Password string `json:"password" binding:"required"`
+	// ConfirmPassword string `json:"confirm_password" binding:"required"`
 }
 
 type UserInfoDto struct {
