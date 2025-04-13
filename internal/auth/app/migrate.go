@@ -25,6 +25,7 @@ func Migrate(r *auth.UserRepo) {
 	if err != nil {
 		panic(err)
 	}
+
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte("test1234"), bcrypt.DefaultCost)
 	if err != nil {
 		panic(err)
@@ -54,8 +55,8 @@ func Migrate(r *auth.UserRepo) {
 		Key:    "",
 	}
 
-	var user entity.User
-	err = r.DB.Where("id = ?", userId).First(&user).Error
+	var user entity.UserData
+	err = r.DB.Where("email = ?", "test@test.test").First(&user).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			err = r.CreateUser(userEntity, userData, auth)
