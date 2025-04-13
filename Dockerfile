@@ -21,8 +21,8 @@ COPY --from=builder /app/.env .
 
 COPY --from=builder /app/main .
 
-COPY --from=builder /app/cert.pem .
-COPY --from=builder /app/key.pem .
+# COPY --from=builder /app/cert.pem .
+# COPY --from=builder /app/key.pem .
 
 EXPOSE 443
 

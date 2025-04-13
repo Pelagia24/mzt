@@ -6,7 +6,6 @@ import (
 	"mzt/internal/auth/dto"
 	"mzt/internal/auth/entity"
 	"mzt/internal/auth/utils"
-	"regexp"
 
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
@@ -46,24 +45,6 @@ func (s *Service) GetUserId(email string) (uuid.UUID, error) {
 }
 
 func (s *Service) SignUp(user *dto.RegistrationDto) (string, string, error) {
-	if !isValidEmail(user.Email) {
-		return "", "", errors.New("Invalid Email")
-	}
-
-	if !isValidPhoneNumber(user.PhoneNumber) {
-		return "", "", errors.New("Invalid Phone Number")
-	}
-
-	if !isValidTelegram(user.Telegram) {
-		return "", "", errors.New("Invalid Telegram")
-	}
-
-	// if user.Password != user.ConfirmPassword {
-	// 	return "", "", errors.New("Password and confirmation don't match")
-	// }
-
-	//TODO more validation
-
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return "", "", err
@@ -71,13 +52,13 @@ func (s *Service) SignUp(user *dto.RegistrationDto) (string, string, error) {
 
 	userID := uuid.New()
 	userEntity := entity.User{
-		ID:    userID,
-		Email: user.Email,
+		ID: userID,
 		// Role:
 		PasswdHash: string(hashedPassword),
 	}
 	userData := entity.UserData{
 		UserID:          userID,
+		Email:           user.Email,
 		Name:            user.Name,
 		Birthdate:       user.Birthdate,
 		PhoneNumber:     user.PhoneNumber,
@@ -90,7 +71,7 @@ func (s *Service) SignUp(user *dto.RegistrationDto) (string, string, error) {
 		MonthIncome:     user.MonthIncome,
 	}
 
-	access, refresh, err := s.generateTokens(userEntity.Email)
+	access, refresh, err := s.generateTokens(userEntity.UserData.Email)
 	if err != nil {
 		return "", "", err
 	}
@@ -109,10 +90,6 @@ func (s *Service) SignUp(user *dto.RegistrationDto) (string, string, error) {
 }
 
 func (s *Service) SignIn(user *dto.LoginDto) (string, string, error) {
-	if !isValidEmail(user.Email) {
-		return "", "", errors.New("Invalid Email")
-	}
-
 	userEntity, err := s.repo.GetUserByEmail(user.Email)
 	if err != nil {
 		return "", "", err
@@ -122,7 +99,7 @@ func (s *Service) SignIn(user *dto.LoginDto) (string, string, error) {
 		return "", "", err
 	}
 
-	access, refresh, err := s.generateTokens(userEntity.Email)
+	access, refresh, err := s.generateTokens(userEntity.UserData.Email)
 	if err != nil {
 		return "", "", err
 	}
@@ -133,24 +110,6 @@ func (s *Service) SignIn(user *dto.LoginDto) (string, string, error) {
 	}
 
 	return access, refresh, nil
-}
-
-func isValidEmail(email string) bool {
-	const emailRegex = `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
-	re := regexp.MustCompile(emailRegex)
-	return re.MatchString(email)
-}
-
-func isValidTelegram(telegram string) bool {
-	const telegramRegex = `^@[A-Za-z0-9_]{5,32}$`
-	re := regexp.MustCompile(telegramRegex)
-	return re.MatchString(telegram)
-}
-
-func isValidPhoneNumber(phone string) bool {
-	const phoneRegex = `^\+?\d{10,15}$`
-	re := regexp.MustCompile(phoneRegex)
-	return re.MatchString(phone)
 }
 
 func (s *Service) GetUsers() ([]dto.UserInfoAdminDto, error) {
@@ -166,7 +125,7 @@ func (s *Service) GetUsers() ([]dto.UserInfoAdminDto, error) {
 			ID:                user.ID,
 			Name:              user.UserData.Name,
 			Birthdate:         user.UserData.Birthdate,
-			Email:             user.Email,
+			Email:             user.UserData.Email,
 			PhoneNumber:       user.UserData.PhoneNumber,
 			Telegram:          user.UserData.Telegram,
 			City:              user.UserData.City,
@@ -191,7 +150,7 @@ func (s *Service) GetUser(userId uuid.UUID) (*dto.UserInfoAdminDto, error) {
 		ID:                user.ID,
 		Name:              user.UserData.Name,
 		Birthdate:         user.UserData.Birthdate,
-		Email:             user.Email,
+		Email:             user.UserData.Email,
 		PhoneNumber:       user.UserData.PhoneNumber,
 		Telegram:          user.UserData.Telegram,
 		City:              user.UserData.City,
@@ -211,6 +170,7 @@ func (s *Service) UpdateUser(userId uuid.UUID, updated *dto.UpdateUserDto) error
 		UserID:          userId,
 		Name:            updated.Name,
 		Birthdate:       updated.Birthdate,
+		Email:           updated.Email,
 		PhoneNumber:     updated.PhoneNumber,
 		Telegram:        updated.Telegram,
 		City:            updated.City,
@@ -265,7 +225,7 @@ func (s *Service) RefreshTokens(cookie string) (string, string, error) {
 		return "", "", errors.New("This refresh token was already refreshed")
 	}
 
-	access, refresh, err := s.generateTokens(userEntity.Email)
+	access, refresh, err := s.generateTokens(userEntity.UserData.Email)
 	if err != nil {
 		return "", "", err
 	}

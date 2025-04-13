@@ -9,6 +9,7 @@ import (
 type UserData struct {
 	ID              uint      `gorm:"primaryKey"`
 	UserID          uuid.UUID `gorm:"type:uuid;uniqueIndex:idx_userid_userdata"`
+	Email           string    `gorm:"uniqueIndex:idx_email;not null"`
 	Name            string
 	Birthdate       time.Time
 	PhoneNumber     string
@@ -23,7 +24,6 @@ type UserData struct {
 
 type User struct {
 	ID         uuid.UUID `gorm:"type:uuid;primaryKey"`
-	Email      string    `gorm:"uniqueIndex:idx_email;not null"`
 	PasswdHash string
 	//TODO make role an entity
 	Role              int

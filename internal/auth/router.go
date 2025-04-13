@@ -6,6 +6,7 @@ import (
 	"mzt/internal/auth/dto"
 	"mzt/internal/auth/utils"
 	"net/http"
+	"regexp"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -42,22 +43,37 @@ func NewRouter(config *config.Config, handler *gin.Engine, service *Service, MW 
 		authHandler.POST("/refresh", r.Refresh)
 	}
 
-	usersGroup := handler.Group("/users")
+	usersGroup := handler.Group("api/v1/users")
 
 	usersGroup.Use(MW.AuthMiddleware())
 	{
 		usersGroup.GET("/me", r.Me)
 
 		adminGroup := usersGroup.Group("")
-		adminGroup.GET("/", r.GetUsers)
-		adminGroup.Use(MW.AdminVerificationMiddleware()).Any("/:user_id", r.Users)
-		adminGroup.GET("/:user_id/role", r.Role)
+		adminGroup.Use(MW.AdminVerificationMiddleware())
+		{
+			adminGroup.GET("/", r.GetUsers)
+			adminGroup.GET("/:user_id", r.Users)
+			adminGroup.PUT("/:user_id", r.Users)
+			adminGroup.DELETE("/:user_id", r.Users)
+			adminGroup.GET("/:user_id/role", r.Role)
+		}
 	}
 
 	//handler.RunTLS(":443", "cert.pem", "key.pem")
 	return r
 }
 
+// @Summary Get all users info(only admin)
+// @Description Gets all users
+// @Tags User
+// @Accept json
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Failure 422 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /users/ [get]
 func (r *Router) GetUsers(c *gin.Context) {
 	users, err := r.service.GetUsers()
 	if err != nil {
@@ -71,6 +87,16 @@ func (r *Router) GetUsers(c *gin.Context) {
 	})
 }
 
+// @Summary Get user role by id
+// @Description Gets all users
+// @Tags User
+// @Accept json
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Failure 422 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /users/:user_id/role [get]
 func (r *Router) Role(c *gin.Context) {
 	userId := c.Param("user_id")
 	id, err := uuid.Parse(userId)
@@ -161,6 +187,42 @@ func (r *Router) Users(c *gin.Context) {
 
 }
 
+// @Summary Update user by dto (only admin)
+// @Description Updates user
+// @Tags User
+// @Accept json
+// @Produce json
+// @Param user body dto.UpdateUserDto true "User to update"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Failure 422 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /users/:user_id [put]
+func (r *Router) _UsersPut(c *gin.Context) {}
+
+// @Summary Get user by dto (only admin)
+// @Description Gets user
+// @Tags User
+// @Accept json
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Failure 404 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /users/:user_id [get]
+func (r *Router) _UsersGet(c *gin.Context) {}
+
+// @Summary Delete user by dto (only admin)
+// @Description Deletes user
+// @Tags User
+// @Accept json
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Failure 404 {object} map[string]interface{}
+// @Failure 422 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /users/:user_id [delete]
+func (r *Router) _UsersDelete(c *gin.Context) {}
+
 // @Summary Get user profile
 // @Description Get user profile
 // @Tags User
@@ -188,7 +250,7 @@ func (r *Router) Me(c *gin.Context) {
 // @Tags User
 // @Accept json
 // @Produce json
-// @Param user body dto.UserLoginInfo true "User login info"
+// @Param user body dto.LoginDto true "User login info"
 // @Success 200 {object} map[string]interface{}
 // @Failure 400 {object} map[string]interface{}
 // @Failure 401 {object} map[string]interface{}
@@ -198,6 +260,16 @@ func (r *Router) SignIn(c *gin.Context) {
 	var payload dto.LoginDto
 	if err := c.ShouldBindJSON(&payload); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if !isValidEmail(payload.Email) {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid email"})
+		return
+	}
+
+	if !isValidPassword(payload.Password) {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Password is weak or contains incorrect symbols"})
 		return
 	}
 
@@ -236,7 +308,7 @@ func (r *Router) SignIn(c *gin.Context) {
 // @Tags User
 // @Accept json
 // @Produce json
-// @Param user body dto.User true "User to create"
+// @Param user body dto.RegistrationDto true "User to create"
 // @Success 201 {object} map[string]interface{}
 // @Failure 400 {object} map[string]interface{}
 // @Failure 500 {object} map[string]interface{}
@@ -246,6 +318,23 @@ func (r *Router) SignUp(c *gin.Context) {
 	if err := c.ShouldBindJSON(&payload); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
+	}
+
+	if !isValidEmail(payload.Email) {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid email"})
+	}
+
+	if !isValidPassword(payload.Password) {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid password"})
+	}
+	if !isValidName(payload.Name) {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid name"})
+	}
+	if !isValidPhoneNumber(payload.PhoneNumber) {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid phone number"})
+	}
+	if !isValidTelegram(payload.Telegram) {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid telegram"})
 	}
 
 	access, refresh, err := r.service.SignUp(&payload)
@@ -334,4 +423,36 @@ func (r *Router) Refresh(c *gin.Context) {
 		"role":         role,
 	})
 
+}
+
+func isValidEmail(email string) bool {
+	const emailRegex = `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
+	re := regexp.MustCompile(emailRegex)
+	return re.MatchString(email)
+}
+
+func isValidTelegram(telegram string) bool {
+	const telegramRegex = `^@[A-Za-z0-9_]{5,32}$`
+	re := regexp.MustCompile(telegramRegex)
+	return re.MatchString(telegram)
+}
+
+func isValidPhoneNumber(phone string) bool {
+	const phoneRegex = `^\+?\d{10,15}$`
+	re := regexp.MustCompile(phoneRegex)
+	return re.MatchString(phone)
+}
+
+func isValidPassword(passwd string) bool {
+	if len(passwd) < 8 {
+		return false
+	}
+
+	allowedChars := regexp.MustCompile(`^[A-Za-z0-9!@#$%^&*()\[\]\-_=+{}|;:,.<>?/]+$`).MatchString(passwd)
+	return allowedChars
+}
+
+func isValidName(name string) bool {
+	validName := regexp.MustCompile(`^[A-Za-z]{2,}$`)
+	return validName.MatchString(name)
 }

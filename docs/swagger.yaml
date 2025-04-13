@@ -1,6 +1,16 @@
 basePath: /api/v1
 definitions:
-  dto.User:
+  dto.LoginDto:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  dto.RegistrationDto:
     properties:
       age:
         type: integer
@@ -11,6 +21,7 @@ definitions:
       email:
         type: string
       employment:
+        description: Age             uint      `json:"age" binding:"required"`
         type: string
       is_business_owner:
         type: string
@@ -19,6 +30,7 @@ definitions:
       name:
         type: string
       password:
+        description: MonthIncome     uint      `json:"month_income" binding:"required"`
         type: string
       phone_number:
         type: string
@@ -27,29 +39,52 @@ definitions:
       telegram:
         type: string
     required:
-    - age
     - birthdate
     - city
     - email
     - employment
     - is_business_owner
-    - month_income
     - name
     - password
     - phone_number
     - position_at_work
     - telegram
     type: object
-  dto.UserLoginInfo:
+  dto.UpdateUserDto:
     properties:
+      age:
+        type: integer
+      birthdate:
+        type: string
+      city:
+        type: string
       email:
         type: string
-      password:
-        maxLength: 20
+      employment:
+        description: Age             uint      `json:"age" binding:"required"`
+        type: string
+      is_business_owner:
+        type: string
+      month_income:
+        type: integer
+      name:
+        type: string
+      phone_number:
+        type: string
+      position_at_work:
+        type: string
+      telegram:
         type: string
     required:
+    - birthdate
+    - city
     - email
-    - password
+    - employment
+    - is_business_owner
+    - name
+    - phone_number
+    - position_at_work
+    - telegram
     type: object
 host: localhost:8080
 info:
@@ -100,7 +135,7 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/dto.UserLoginInfo'
+          $ref: '#/definitions/dto.LoginDto'
       produces:
       - application/json
       responses:
@@ -138,7 +173,7 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/dto.User'
+          $ref: '#/definitions/dto.RegistrationDto'
       produces:
       - application/json
       responses:
@@ -158,6 +193,161 @@ paths:
             additionalProperties: true
             type: object
       summary: Sign up user
+      tags:
+      - User
+  /users/:
+    get:
+      consumes:
+      - application/json
+      description: Gets all users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get all users info(only admin)
+      tags:
+      - User
+  /users/:user_id:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete user by dto (only admin)
+      tags:
+      - User
+    get:
+      consumes:
+      - application/json
+      description: Gets user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get user by dto (only admin)
+      tags:
+      - User
+    put:
+      consumes:
+      - application/json
+      description: Updates user
+      parameters:
+      - description: User to update
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateUserDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update user by dto (only admin)
+      tags:
+      - User
+  /users/:user_id/role:
+    get:
+      consumes:
+      - application/json
+      description: Gets all users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get user role by id
       tags:
       - User
   /users/me:

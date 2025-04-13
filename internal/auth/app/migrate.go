@@ -34,7 +34,6 @@ func Migrate(r *auth.UserRepo) {
 
 	userEntity := &entity.User{
 		ID:         userId,
-		Email:      "test@test.test",
 		Role:       1,
 		PasswdHash: string(hashedPassword),
 	}
@@ -42,6 +41,7 @@ func Migrate(r *auth.UserRepo) {
 	userData := &entity.UserData{
 		ID:          0,
 		UserID:      userId,
+		Email:       "test@test.test",
 		Name:        "test",
 		Birthdate:   time.Now(),
 		PhoneNumber: "+71111111111",

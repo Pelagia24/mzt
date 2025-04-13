@@ -42,12 +42,18 @@ func (r *UserRepo) GetUsers() ([]entity.User, error) {
 }
 
 func (r *UserRepo) GetUserByEmail(email string) (*entity.User, error) {
-	var user entity.User
-	err := r.DB.Where("email = ?", email).First(&user).Error
+	var userdata entity.UserData
+	err := r.DB.Where("email = ?", email).First(&userdata).Error
 	if err != nil {
 		return nil, err
 	}
-	return &user, nil
+
+	user, err := r.GetUserById(userdata.UserID)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }
 
 func (r *UserRepo) GetUserById(userId uuid.UUID) (*entity.User, error) {

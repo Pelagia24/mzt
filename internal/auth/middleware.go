@@ -60,7 +60,7 @@ func (m *Middleware) AuthMiddleware() gin.HandlerFunc {
 		userInfo := &dto.UserInfoDto{
 			Name:            userWithData.UserData.Name,
 			Birthdate:       userWithData.UserData.Birthdate,
-			Email:           userWithData.Email,
+			Email:           userWithData.UserData.Email,
 			PhoneNumber:     userWithData.UserData.PhoneNumber,
 			Telegram:        userWithData.UserData.Telegram,
 			City:            userWithData.UserData.City,

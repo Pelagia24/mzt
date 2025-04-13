@@ -2,8 +2,6 @@ package dto
 
 import (
 	"time"
-
-	"github.com/google/uuid"
 )
 
 type RegistrationDto struct {
@@ -46,7 +44,6 @@ type LoginDto struct {
 }
 
 type UpdateUserDto struct {
-	ID          uuid.UUID `json:"id" binding:"required"`
 	Name        string    `json:"name" binding:"required"`
 	Birthdate   time.Time `json:"birthdate" binding:"required"`
 	Email       string    `json:"email" binding:"required"`
