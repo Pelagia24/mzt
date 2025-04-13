@@ -35,6 +35,16 @@ func NewService(cfg *config.Config, repo *UserRepo) *Service {
 	}
 }
 
+func (s *Service) GetUserId(email string) (uuid.UUID, error) {
+	user, err := s.repo.GetUserByEmail(email)
+	if err != nil {
+		return uuid.Nil, err
+
+	}
+
+	return user.ID, nil
+}
+
 func (s *Service) SignUp(user *dto.RegistrationDto) (string, string, error) {
 	if !isValidEmail(user.Email) {
 		return "", "", errors.New("Invalid Email")

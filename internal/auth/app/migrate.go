@@ -1,6 +1,7 @@
 package app
 
 import (
+	"errors"
 	"fmt"
 	"mzt/internal/auth"
 	"mzt/internal/auth/entity"
@@ -8,6 +9,7 @@ import (
 
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 func Migrate(r *auth.UserRepo) {
@@ -52,10 +54,16 @@ func Migrate(r *auth.UserRepo) {
 		Key:    "",
 	}
 
-	err = r.CreateUser(userEntity, userData, auth)
-	if err != nil {
+	var user entity.User
+	err = r.DB.Where("id = ?", userId).First(&user).Error
+	if err == nil {
+		err = r.CreateUser(userEntity, userData, auth)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println("migrated")
+
+	} else if !errors.Is(err, gorm.ErrRecordNotFound) {
 		panic(err)
 	}
-
-	fmt.Println("migrated")
 }

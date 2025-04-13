@@ -4,6 +4,7 @@ import (
 	"mzt/config"
 	_ "mzt/docs"
 	"mzt/internal/auth/dto"
+	"mzt/internal/auth/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -207,12 +208,26 @@ func (r *Router) SignIn(c *gin.Context) {
 		return
 	}
 
+	id, err := r.service.GetUserId(payload.Email)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
+
+	role, err := r.service.Role(id)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
+
 	// c.SetCookie("refresh_token", refresh, int(r.config.Jwt.RefreshExpiresIn.Seconds()), "/", "localhost", true, true)
 	c.SetCookie("refresh_token", refresh, int(r.config.Jwt.RefreshExpiresIn.Seconds()), "/", "localhost", false, true)
 
 	c.JSON(http.StatusOK, gin.H{
 		"message":      "User signed in successfully",
 		"access_token": access,
+		"id":           id,
+		"role":         role,
 	})
 }
 
@@ -240,12 +255,26 @@ func (r *Router) SignUp(c *gin.Context) {
 		return
 	}
 
+	id, err := r.service.GetUserId(payload.Email)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
+
+	role, err := r.service.Role(id)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
+
 	// c.SetCookie("refresh_token", refresh, int(r.config.Jwt.RefreshExpiresIn.Seconds()), "/", "localhost", true, true)
 	c.SetCookie("refresh_token", refresh, int(r.config.Jwt.RefreshExpiresIn.Seconds()), "/", "localhost", false, true)
 
 	c.JSON(http.StatusCreated, gin.H{
 		"message":      "User created successfully",
 		"access_token": access,
+		"id":           id,
+		"role":         role,
 	})
 }
 
@@ -271,12 +300,38 @@ func (r *Router) Refresh(c *gin.Context) {
 		return
 	}
 
+	//after validation
+	parsed, err := utils.ValidateToken(token, r.config.Jwt.RefreshKey)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
+
+	sub, err := parsed.Claims.GetSubject()
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
+
+	id, err := r.service.GetUserId(sub)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
+
+	role, err := r.service.Role(id)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
 	// c.SetCookie("refresh_token", refresh, int(r.config.Jwt.RefreshExpiresIn.Seconds()), "/", "localhost", true, true)
 	c.SetCookie("refresh_token", refresh, int(r.config.Jwt.RefreshExpiresIn.Seconds()), "/", "localhost", false, true)
 
 	c.JSON(http.StatusOK, gin.H{
 		"message":      "Tokens refreshed successfully",
 		"access_token": access,
+		"id":           id,
+		"role":         role,
 	})
 
 }
