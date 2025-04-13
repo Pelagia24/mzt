@@ -27,9 +27,9 @@ type User struct {
 	PasswdHash string
 	//TODO make role an entity
 	Role              int
-	Auth              *Auth
-	UserData          *UserData
-	CourseAssignments []CourseAssignment
+	Auth              *Auth              `gorm:"constraint:OnDelete:CASCADE;"`
+	UserData          *UserData          `gorm:"constraint:OnDelete:CASCADE;"`
+	CourseAssignments []CourseAssignment `gorm:"constraint:OnDelete:CASCADE;"`
 	// EventRecords []EventAssignment
 }
 
