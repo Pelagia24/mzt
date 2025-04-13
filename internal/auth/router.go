@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"fmt"
 	"mzt/config"
 	_ "mzt/docs"
 	"mzt/internal/auth/dto"
@@ -383,7 +382,6 @@ func (r *Router) Refresh(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
 	}
-	fmt.Println("1")
 	access, refresh, err := r.service.RefreshTokens(token)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
@@ -396,21 +394,18 @@ func (r *Router) Refresh(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
 	}
-	fmt.Println("2")
 
 	sub, err := parsed.Claims.GetSubject()
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
 	}
-	fmt.Println("3")
 
 	id, err := r.service.GetUserId(sub)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
 	}
-	fmt.Println("4")
 
 	role, err := r.service.Role(id)
 	if err != nil {

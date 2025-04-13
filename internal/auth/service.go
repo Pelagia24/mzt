@@ -2,7 +2,6 @@ package auth
 
 import (
 	"errors"
-	"fmt"
 	"mzt/config"
 	"mzt/internal/auth/dto"
 	"mzt/internal/auth/entity"
@@ -72,7 +71,7 @@ func (s *Service) SignUp(user *dto.RegistrationDto) (string, string, error) {
 		MonthIncome:     user.MonthIncome,
 	}
 
-	access, refresh, err := s.generateTokens(userEntity.UserData.Email)
+	access, refresh, err := s.generateTokens(user.Email)
 	if err != nil {
 		return "", "", err
 	}
@@ -215,13 +214,11 @@ func (s *Service) RefreshTokens(cookie string) (string, string, error) {
 	if err != nil || sub == "" {
 		return "", "", err
 	}
-	fmt.Println("9")
 
 	user, err := s.repo.GetUserByEmail(sub)
 	if err != nil {
 		return "", "", err
 	}
-	fmt.Println("10")
 
 	userData, err := s.repo.GetUserWithDataById(user.ID)
 
