@@ -156,7 +156,8 @@ func (r *Router) Users(c *gin.Context) {
 		selfId, err := uuid.Parse(casted)
 		fmt.Println(selfId)
 		if err != nil {
-			c.JSON(http.StatusUnprocessableEntity, gin.H{"error": "Can't parse user id"})
+			c.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
+			// c.JSON(http.StatusUnprocessableEntity, gin.H{"error": "Can't parse user id"})
 			return
 		}
 
