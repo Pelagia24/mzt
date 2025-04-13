@@ -56,14 +56,16 @@ func Migrate(r *auth.UserRepo) {
 
 	var user entity.User
 	err = r.DB.Where("id = ?", userId).First(&user).Error
-	if err == nil {
-		err = r.CreateUser(userEntity, userData, auth)
-		if err != nil {
+	if err != nil {
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			err = r.CreateUser(userEntity, userData, auth)
+			if err != nil {
+				panic(err)
+			}
+			fmt.Println("migrated")
+		} else {
 			panic(err)
 		}
-		fmt.Println("migrated")
 
-	} else if !errors.Is(err, gorm.ErrRecordNotFound) {
-		panic(err)
 	}
 }

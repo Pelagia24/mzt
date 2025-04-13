@@ -94,12 +94,16 @@ func (s *Service) SignIn(user *dto.LoginDto) (string, string, error) {
 	if err != nil {
 		return "", "", err
 	}
-
 	if err := bcrypt.CompareHashAndPassword([]byte(userEntity.PasswdHash), []byte(user.Password)); err != nil {
 		return "", "", err
 	}
 
-	access, refresh, err := s.generateTokens(userEntity.UserData.Email)
+	userWithData, err := s.repo.GetUserWithDataById(userEntity.ID)
+	if err != nil {
+		return "", "", err
+	}
+
+	access, refresh, err := s.generateTokens(userWithData.UserData.Email)
 	if err != nil {
 		return "", "", err
 	}
