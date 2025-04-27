@@ -1,9 +1,11 @@
-package auth
+package middleware
 
 import (
 	"mzt/config"
-	"mzt/internal/auth/dto"
-	"mzt/internal/auth/utils"
+	"mzt/internal/dto"
+	"mzt/internal/repository"
+	"mzt/internal/service"
+	"mzt/internal/validator"
 	"net/http"
 	"strings"
 
@@ -11,14 +13,16 @@ import (
 )
 
 type Middleware struct {
-	config *config.Config
-	repo   *UserRepo
+	config    *config.Config
+	repo      *repository.UserRepo
+	validator *validator.Validator
 }
 
-func NewMiddleware(config *config.Config, repo *UserRepo) *Middleware {
+func NewMiddleware(config *config.Config, repo *repository.UserRepo) *Middleware {
 	return &Middleware{
-		config: config,
-		repo:   repo,
+		config:    config,
+		repo:      repo,
+		validator: validator.NewValidator(),
 	}
 }
 
@@ -32,7 +36,7 @@ func (m *Middleware) AuthMiddleware() gin.HandlerFunc {
 		}
 
 		tokenString := fields[1]
-		token, err := utils.ValidateToken(tokenString, m.config.Jwt.AccessKey)
+		token, err := m.validator.ValidateToken(tokenString, m.config.Jwt.AccessKey)
 
 		if err != nil || token == nil || !token.Valid {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
@@ -93,10 +97,39 @@ func (m *Middleware) AdminVerificationMiddleware() gin.HandlerFunc {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "User not found"})
 		}
 
-		if user.Role != int(Admin) || user.Role < 0 {
+		if user.Role != int(service.Admin) || user.Role < 0 {
 			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"error": "No admin privilegies"})
 		}
 
 		c.Next()
 	}
 }
+
+// func (m *Middleware) SelfVerificationMiddleware() gin.HandlerFunc {
+// 	return func(c *gin.Context) {
+// 		userContext, ok := c.Get("user")
+// 		userDto := userContext.(*dto.UserInfoDto)
+// 		if !ok {
+// 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "User is not specified"})
+// 			return
+// 		}
+
+// 		user, err := m.repo.GetUserByEmail(userDto.Email)
+// 		if err != nil {
+// 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "User not found"})
+// 			return
+// 		}
+
+// 		self, ok := c.Get("self")
+// 		if !ok {
+// 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Self is not specified"})
+// 			return
+// 		}
+
+// 		if self != user.ID {
+// 			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"error": "No self privilegies"})
+// 		}
+
+// 		c.Next()
+// 	}
+// }

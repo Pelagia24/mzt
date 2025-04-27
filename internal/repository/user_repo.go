@@ -1,29 +1,34 @@
-package auth
+package repository
 
 import (
 	"fmt"
 	"mzt/config"
-	"mzt/internal/auth/entity"
+	"mzt/internal/entity"
+	"time"
 
 	"github.com/google/uuid"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
+type UserRepository interface {
+	GetUserByEmail(email string) (*entity.User, error)
+	GetUserWithDataById(id uuid.UUID) (*entity.User, error)
+	GetUserWithRefreshById(id uuid.UUID) (*entity.User, error)
+	CreateUser(user *entity.User, userData *entity.UserData, auth *entity.Auth) error
+	UpdateToken(userId uuid.UUID, token string) error
+	DeleteUser(userId uuid.UUID) error
+	UpdateUser(userId uuid.UUID, updated *entity.UserData) error
+	GetUsers() ([]entity.User, error)
+	GetUserById(userId uuid.UUID) (*entity.User, error)
+}
+
 type UserRepo struct {
 	config *config.Config
 	DB     *gorm.DB
 }
 
-type UserRepository interface {
-	CreateUser()
-	UpdateUser()
-	GetRefreshTokenByEmail()
-	// GetInternalIdByEmail()
-	GetUserByEmail()
-}
-
-func NewRefreshTokensRepo(cfg *config.Config) *UserRepo {
+func NewUserRepo(cfg *config.Config) *UserRepo {
 	db := connectDB(cfg)
 	return &UserRepo{
 		config: cfg,
@@ -169,9 +174,21 @@ func connectDB(config *config.Config) *gorm.DB {
 		config.DB.Name,
 		config.DB.Password)
 
-	postrgresDB, err := gorm.Open(postgres.Open(connectionString), &gorm.Config{})
-	if err != nil {
-		panic("failed to connect database")
+	var postrgresDB *gorm.DB
+	var err error
+	maxRetries := 5
+	backoff := time.Second
+
+	for i := 0; i < maxRetries; i++ {
+		postrgresDB, err = gorm.Open(postgres.Open(connectionString), &gorm.Config{})
+		if err == nil {
+			return postrgresDB
+		}
+
+		if i < maxRetries-1 {
+			time.Sleep(backoff)
+		}
 	}
-	return postrgresDB
+
+	panic(fmt.Sprintf("failed to connect database after %d retries: %v", maxRetries, err))
 }

@@ -3,8 +3,8 @@ package app
 import (
 	"errors"
 	"fmt"
-	"mzt/internal/auth"
-	"mzt/internal/auth/entity"
+	"mzt/internal/entity"
+	"mzt/internal/repository"
 	"time"
 
 	"github.com/google/uuid"
@@ -12,7 +12,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func Migrate(r *auth.UserRepo) {
+func Migrate(r *repository.UserRepo) {
 	r.DB.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\"")
 	err := r.DB.AutoMigrate(
 		&entity.User{},

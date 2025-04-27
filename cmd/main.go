@@ -2,8 +2,7 @@ package main
 
 import (
 	"mzt/config"
-	_ "mzt/docs"
-	"mzt/internal/auth/app"
+	"mzt/internal/app"
 )
 
 func main() {

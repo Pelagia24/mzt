@@ -39,14 +39,13 @@ type Auth struct {
 	Key    string    `gorm:"type:varchar(255);not null"`
 }
 
-// Courses
 type Course struct {
 	CourseID uuid.UUID `gorm:"type:uuid;primaryKey"`
 	Title    string
 	Desc     string
 
-	Lessons           []Lesson
-	CourseAssignments []CourseAssignment
+	Lessons           []Lesson  `gorm:"constraint:OnDelete:CASCADE;"`
+	CourseAssignments []CourseAssignment `gorm:"constraint:OnDelete:CASCADE;"`
 }
 
 type CourseAssignment struct {
@@ -55,15 +54,17 @@ type CourseAssignment struct {
 	CourseID uuid.UUID `gorm:"type:uuid;not null"`
 	Progress uint
 
-	User   User   `gorm:"constraint:OnDelete:CASCADE;"`
-	Course Course `gorm:"constraint:OnDelete:CASCADE;"`
+	User   User   
+	Course Course 
 }
 
 type Lesson struct {
 	LessonID   uuid.UUID `gorm:"type:uuid;primaryKey"`
 	CourseID   uuid.UUID `gorm:"type:uuid;not null"`
+	Title      string
+	Desc       string
 	VideoURL   string
 	SummaryURL string
 
-	Course Course `gorm:"constraint:OnDelete:CASCADE;"`
+	Course Course
 }

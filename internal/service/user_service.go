@@ -1,11 +1,12 @@
-package auth
+package service
 
 import (
 	"errors"
 	"mzt/config"
-	"mzt/internal/auth/dto"
-	"mzt/internal/auth/entity"
-	"mzt/internal/auth/utils"
+	"mzt/internal/dto"
+	"mzt/internal/entity"
+	"mzt/internal/repository"
+	"mzt/internal/validator"
 
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
@@ -22,29 +23,30 @@ func (r Role) String() string {
 	return [...]string{"Default", "Admin"}[r]
 }
 
-type Service struct {
-	config *config.Config
-	repo   *UserRepo
+type UserService struct {
+	config    *config.Config
+	repo      repository.UserRepository
+	validator *validator.Validator
 }
 
-func NewService(cfg *config.Config, repo *UserRepo) *Service {
-	return &Service{
-		config: cfg,
-		repo:   repo,
+func NewUserService(cfg *config.Config, repo repository.UserRepository) *UserService {
+	return &UserService{
+		config:    cfg,
+		repo:      repo,
+		validator: validator.NewValidator(),
 	}
 }
 
-func (s *Service) GetUserId(email string) (uuid.UUID, error) {
+func (s *UserService) GetUserId(email string) (uuid.UUID, error) {
 	user, err := s.repo.GetUserByEmail(email)
 	if err != nil {
 		return uuid.Nil, err
-
 	}
 
 	return user.ID, nil
 }
 
-func (s *Service) SignUp(user *dto.RegistrationDto) (string, string, error) {
+func (s *UserService) SignUp(user *dto.RegistrationDto) (string, string, error) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return "", "", err
@@ -52,8 +54,7 @@ func (s *Service) SignUp(user *dto.RegistrationDto) (string, string, error) {
 
 	userID := uuid.New()
 	userEntity := entity.User{
-		ID: userID,
-		// Role:
+		ID:         userID,
 		PasswdHash: string(hashedPassword),
 	}
 	userData := entity.UserData{
@@ -89,7 +90,7 @@ func (s *Service) SignUp(user *dto.RegistrationDto) (string, string, error) {
 	return access, refresh, nil
 }
 
-func (s *Service) SignIn(user *dto.LoginDto) (string, string, error) {
+func (s *UserService) SignIn(user *dto.LoginDto) (string, string, error) {
 	userEntity, err := s.repo.GetUserByEmail(user.Email)
 	if err != nil {
 		return "", "", err
@@ -116,7 +117,7 @@ func (s *Service) SignIn(user *dto.LoginDto) (string, string, error) {
 	return access, refresh, nil
 }
 
-func (s *Service) GetUsers() ([]dto.UserInfoAdminDto, error) {
+func (s *UserService) GetUsers() ([]dto.UserInfoAdminDto, error) {
 	users, err := s.repo.GetUsers()
 	if err != nil {
 		return nil, err
@@ -141,11 +142,10 @@ func (s *Service) GetUsers() ([]dto.UserInfoAdminDto, error) {
 			CourseAssignments: nil,
 		})
 	}
-	//TODO check this out
 	return result, nil
 }
 
-func (s *Service) GetUser(userId uuid.UUID) (*dto.UserInfoAdminDto, error) {
+func (s *UserService) GetUser(userId uuid.UUID) (*dto.UserInfoAdminDto, error) {
 	user, err := s.repo.GetUserWithDataById(userId)
 	if err != nil {
 		return nil, err
@@ -169,7 +169,7 @@ func (s *Service) GetUser(userId uuid.UUID) (*dto.UserInfoAdminDto, error) {
 	return userDto, nil
 }
 
-func (s *Service) UpdateUser(userId uuid.UUID, updated *dto.UpdateUserDto) error {
+func (s *UserService) UpdateUser(userId uuid.UUID, updated *dto.UpdateUserDto) error {
 	updatedEnity := &entity.UserData{
 		UserID:          userId,
 		Name:            updated.Name,
@@ -187,7 +187,7 @@ func (s *Service) UpdateUser(userId uuid.UUID, updated *dto.UpdateUserDto) error
 	return s.repo.UpdateUser(userId, updatedEnity)
 }
 
-func (s *Service) DeleteUser(toDel uuid.UUID) error {
+func (s *UserService) DeleteUser(toDel uuid.UUID) error {
 	err := s.repo.DeleteUser(toDel)
 	if err != nil {
 		return err
@@ -195,8 +195,8 @@ func (s *Service) DeleteUser(toDel uuid.UUID) error {
 	return nil
 }
 
-func (s *Service) Role(userId uuid.UUID) (string, error) {
-	user, err := s.repo.GetUserById(userId)
+func (s *UserService) Role(userId uuid.UUID) (string, error) {
+	user, err := s.repo.GetUserWithDataById(userId)
 	if err != nil {
 		return "", err
 	}
@@ -204,8 +204,8 @@ func (s *Service) Role(userId uuid.UUID) (string, error) {
 	return Role(user.Role).String(), nil
 }
 
-func (s *Service) RefreshTokens(cookie string) (string, string, error) {
-	token, err := utils.ValidateToken(cookie, s.config.Jwt.RefreshKey)
+func (s *UserService) RefreshTokens(cookie string) (string, string, error) {
+	token, err := s.validator.ValidateToken(cookie, s.config.Jwt.RefreshKey)
 	if err != nil || !token.Valid {
 		return "", "", err
 	}
@@ -221,6 +221,9 @@ func (s *Service) RefreshTokens(cookie string) (string, string, error) {
 	}
 
 	userData, err := s.repo.GetUserWithDataById(user.ID)
+	if err != nil {
+		return "", "", err
+	}
 
 	userEntity, err := s.repo.GetUserWithRefreshById(user.ID)
 	if err != nil {
@@ -228,7 +231,7 @@ func (s *Service) RefreshTokens(cookie string) (string, string, error) {
 	}
 
 	if userEntity.Auth.Key != cookie {
-		return "", "", errors.New("This refresh token was already refreshed")
+		return "", "", errors.New("this refresh token was already refreshed")
 	}
 
 	access, refresh, err := s.generateTokens(userData.UserData.Email)
@@ -243,14 +246,13 @@ func (s *Service) RefreshTokens(cookie string) (string, string, error) {
 	return access, refresh, nil
 }
 
-func (s *Service) generateTokens(email string) (access string, refresh string, error error) {
-
-	access, err := utils.GenerateToken(email, s.config.Jwt.AccessKey, s.config.Jwt.AccessExpiresIn)
+func (s *UserService) generateTokens(email string) (access string, refresh string, error error) {
+	access, err := s.validator.GenerateToken(email, s.config.Jwt.AccessKey, s.config.Jwt.AccessExpiresIn)
 	if err != nil {
 		return "", "", err
 	}
 
-	refresh, err = utils.GenerateToken(email, s.config.Jwt.RefreshKey, s.config.Jwt.RefreshExpiresIn)
+	refresh, err = s.validator.GenerateToken(email, s.config.Jwt.RefreshKey, s.config.Jwt.RefreshExpiresIn)
 	if err != nil {
 		return "", "", err
 	}

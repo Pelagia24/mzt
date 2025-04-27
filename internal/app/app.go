@@ -2,21 +2,25 @@ package app
 
 import (
 	"mzt/config"
-	"mzt/internal/auth"
+	"mzt/internal/middleware"
+	"mzt/internal/repository"
+	"mzt/internal/router"
+	"mzt/internal/service"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 func Run(cfg *config.Config) {
+	userRepo := repository.NewUserRepo(cfg)
+	courseRepo := repository.NewCourseRepo(cfg)
 
-	repo := auth.NewRefreshTokensRepo(cfg)
+	Migrate(userRepo)
 
-	Migrate(repo)
+	authService := service.NewUserService(cfg, userRepo)
+	courseService := service.NewCourseService(cfg, courseRepo)
 
-	service := auth.NewService(cfg, repo)
-
-	middleware := auth.NewMiddleware(cfg, repo)
+	middleware := middleware.NewMiddleware(cfg, userRepo)
 
 	handler := gin.Default()
 
@@ -28,8 +32,7 @@ func Run(cfg *config.Config) {
 		AllowCredentials: true,
 	}))
 
-	auth.NewRouter(cfg, handler, service, middleware)
+	router.NewRouter(cfg, handler, authService, courseService, middleware)
 	handler.Run(":8080")
 	//TODO server
-	//TODO nginx
 }
