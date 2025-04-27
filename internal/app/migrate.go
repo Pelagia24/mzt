@@ -154,7 +154,7 @@ func Migrate(r *repository.UserRepo) {
 					CourseID: course.CourseID,
 					Title:    "HTML Structure and Semantics",
 					Summery:  "Learn about HTML5 elements and semantic markup",
-					VideoURL: "https://www.youtube.com/watch?v=MLpmiywRNzY",
+					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
 					Text:     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
 				},
 				{
@@ -162,7 +162,7 @@ func Migrate(r *repository.UserRepo) {
 					CourseID: course.CourseID,
 					Title:    "CSS Layouts and Flexbox",
 					Summery:  "Master CSS layouts using Flexbox and Grid",
-					VideoURL: "https://www.youtube.com/watch?v=MLpmiywRNzY",
+					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
 					Text:     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
 				},
 				{
@@ -170,7 +170,7 @@ func Migrate(r *repository.UserRepo) {
 					CourseID: course.CourseID,
 					Title:    "Responsive Design",
 					Summery:  "Create responsive websites that work on all devices",
-					VideoURL: "https://www.youtube.com/watch?v=MLpmiywRNzY",
+					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
 					Text:     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
 				},
 			}
@@ -181,7 +181,7 @@ func Migrate(r *repository.UserRepo) {
 					CourseID: course.CourseID,
 					Title:    "JavaScript Basics",
 					Summery:  "Learn JavaScript fundamentals and syntax",
-					VideoURL: "https://www.youtube.com/watch?v=MLpmiywRNzY",
+					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
 					Text:     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
 				},
 				{
@@ -189,7 +189,7 @@ func Migrate(r *repository.UserRepo) {
 					CourseID: course.CourseID,
 					Title:    "DOM Manipulation",
 					Summery:  "Work with the Document Object Model",
-					VideoURL: "https://www.youtube.com/watch?v=MLpmiywRNzY",
+					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
 					Text:     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
 				},
 				{
@@ -197,7 +197,7 @@ func Migrate(r *repository.UserRepo) {
 					CourseID: course.CourseID,
 					Title:    "Async JavaScript",
 					Summery:  "Master Promises, Async/Await, and Event Loop",
-					VideoURL: "https://www.youtube.com/watch?v=MLpmiywRNzY",
+					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
 					Text:     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
 				},
 			}
@@ -208,7 +208,7 @@ func Migrate(r *repository.UserRepo) {
 					CourseID: course.CourseID,
 					Title:    "React Components",
 					Summery:  "Learn about React components and props",
-					VideoURL: "https://www.youtube.com/watch?v=MLpmiywRNzY",
+					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
 					Text:     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
 				},
 				{
@@ -216,7 +216,7 @@ func Migrate(r *repository.UserRepo) {
 					CourseID: course.CourseID,
 					Title:    "State Management",
 					Summery:  "Manage application state with React hooks",
-					VideoURL: "https://www.youtube.com/watch?v=MLpmiywRNzY",
+					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
 					Text:     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
 				},
 				{
@@ -224,7 +224,7 @@ func Migrate(r *repository.UserRepo) {
 					CourseID: course.CourseID,
 					Title:    "React Router",
 					Summery:  "Implement routing in React applications",
-					VideoURL: "https://www.youtube.com/watch?v=MLpmiywRNzY",
+					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
 					Text:     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
 				},
 			}
@@ -235,7 +235,7 @@ func Migrate(r *repository.UserRepo) {
 					CourseID: course.CourseID,
 					Title:    "Vue Components",
 					Summery:  "Create and use Vue components",
-					VideoURL: "https://www.youtube.com/watch?v=MLpmiywRNzY",
+					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
 					Text:     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
 				},
 				{
@@ -243,7 +243,7 @@ func Migrate(r *repository.UserRepo) {
 					CourseID: course.CourseID,
 					Title:    "Vuex State Management",
 					Summery:  "Manage state with Vuex",
-					VideoURL: "https://www.youtube.com/watch?v=MLpmiywRNzY",
+					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
 					Text:     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
 				},
 				{
@@ -251,7 +251,7 @@ func Migrate(r *repository.UserRepo) {
 					CourseID: course.CourseID,
 					Title:    "Vue Router",
 					Summery:  "Implement routing in Vue applications",
-					VideoURL: "https://www.youtube.com/watch?v=MLpmiywRNzY",
+					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
 					Text:     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
 				},
 			}
@@ -262,7 +262,7 @@ func Migrate(r *repository.UserRepo) {
 					CourseID: course.CourseID,
 					Title:    "TypeScript Basics",
 					Summery:  "Learn TypeScript fundamentals",
-					VideoURL: "https://www.youtube.com/watch?v=MLpmiywRNzY",
+					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
 					Text:     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
 				},
 				{
@@ -270,7 +270,7 @@ func Migrate(r *repository.UserRepo) {
 					CourseID: course.CourseID,
 					Title:    "TypeScript with React",
 					Summery:  "Use TypeScript in React applications",
-					VideoURL: "https://www.youtube.com/watch?v=MLpmiywRNzY",
+					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
 					Text:     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
 				},
 				{
@@ -278,7 +278,7 @@ func Migrate(r *repository.UserRepo) {
 					CourseID: course.CourseID,
 					Title:    "TypeScript with Vue",
 					Summery:  "Use TypeScript in Vue applications",
-					VideoURL: "https://www.youtube.com/watch?v=MLpmiywRNzY",
+					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
 					Text:     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
 				},
 			}
@@ -289,7 +289,7 @@ func Migrate(r *repository.UserRepo) {
 					CourseID: course.CourseID,
 					Title:    "Unit Testing",
 					Summery:  "Write unit tests for frontend code",
-					VideoURL: "https://www.youtube.com/watch?v=MLpmiywRNzY",
+					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
 					Text:     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
 				},
 				{
@@ -297,7 +297,7 @@ func Migrate(r *repository.UserRepo) {
 					CourseID: course.CourseID,
 					Title:    "Integration Testing",
 					Summery:  "Test component interactions",
-					VideoURL: "https://www.youtube.com/watch?v=MLpmiywRNzY",
+					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
 					Text:     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
 				},
 				{
@@ -305,7 +305,7 @@ func Migrate(r *repository.UserRepo) {
 					CourseID: course.CourseID,
 					Title:    "E2E Testing",
 					Summery:  "End-to-end testing with Cypress",
-					VideoURL: "https://www.youtube.com/watch?v=MLpmiywRNzY",
+					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
 					Text:     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
 				},
 			}
