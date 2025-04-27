@@ -142,7 +142,7 @@ GET /users
             "is_business_owner": "string",
             "position_at_work": "string",
             "month_income": "uint",
-            "course_assignments": "interface{}"
+            "course_assignments": "[]CourseDto"
         }
     ]
 }
@@ -385,9 +385,7 @@ GET /courses/:course_id/progress
 **Response:**
 ```json
 {
-    "user_id": "uuid.UUID",
     "course_id": "uuid.UUID",
-    "completed_lessons": ["uuid.UUID"],
     "progress_percentage": "int"
 }
 ```
