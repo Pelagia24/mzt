@@ -6,3 +6,5 @@ Start-Sleep -Seconds 5
 go test ./internal/repository -v
 
 docker-compose -f docker-compose.test.yml down -v
+
+go test ./internal/service -v

@@ -126,6 +126,13 @@ func (s *UserService) GetUsers() ([]dto.UserInfoAdminDto, error) {
 	result := make([]dto.UserInfoAdminDto, 0)
 
 	for _, user := range users {
+		courseAssignments := make([]dto.CourseDto, 0)
+		for _, assignment := range user.CourseAssignments {
+			courseAssignments = append(courseAssignments, dto.CourseDto{
+				CourseID: assignment.CourseID,
+				Name:     assignment.Course.Title,
+			})
+		}
 		result = append(result, dto.UserInfoAdminDto{
 			ID:                user.ID,
 			Name:              user.UserData.Name,
@@ -139,7 +146,7 @@ func (s *UserService) GetUsers() ([]dto.UserInfoAdminDto, error) {
 			IsBusinessOwner:   user.UserData.IsBusinessOwner,
 			PositionAtWork:    user.UserData.PositionAtWork,
 			MonthIncome:       user.UserData.MonthIncome,
-			CourseAssignments: nil,
+			CourseAssignments: courseAssignments,
 		})
 	}
 	return result, nil

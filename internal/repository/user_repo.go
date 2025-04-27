@@ -38,7 +38,7 @@ func NewUserRepo(cfg *config.Config) *UserRepo {
 
 func (r *UserRepo) GetUsers() ([]entity.User, error) {
 	var users []entity.User
-	err := r.DB.Preload("UserData").Find(&users).Error
+	err := r.DB.Preload("UserData").Preload("CourseAssignments").Preload("CourseAssignments.Course").Find(&users).Error
 	if err != nil {
 		return nil, err
 	}

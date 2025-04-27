@@ -19,7 +19,7 @@ type UserInfoAdminDto struct {
 	IsBusinessOwner   string      `json:"is_business_owner" binding:"required"`
 	PositionAtWork    string      `json:"position_at_work" binding:"required"`
 	MonthIncome       uint        `json:"month_income"`
-	CourseAssignments interface{} `json:"course_assignments"`
+	CourseAssignments []CourseDto `json:"course_assignments"`
 }
 type CreateCourseDto struct {
 	Name        string `json:"name" binding:"required"`
