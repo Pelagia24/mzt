@@ -91,9 +91,9 @@ func (r *CourseRepo) UpdateLesson(lesson *entity.Lesson) error {
 	}
 
 	existingLesson.Title = lesson.Title
-	existingLesson.Desc = lesson.Desc
+	existingLesson.Summery = lesson.Summery
 	existingLesson.VideoURL = lesson.VideoURL
-	existingLesson.SummaryURL = lesson.SummaryURL
+	existingLesson.Text = lesson.Text
 
 	if err := tx.Save(&existingLesson).Error; err != nil {
 		tx.Rollback()

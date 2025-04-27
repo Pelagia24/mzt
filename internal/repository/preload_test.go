@@ -156,20 +156,20 @@ func TestPreloadRelationships(t *testing.T) {
 
 		lessons := []*entity.Lesson{
 			{
-				LessonID:   uuid.New(),
-				CourseID:   courseId,
-				Title:      "Lesson 1",
-				Desc:       "Description 1",
-				VideoURL:   "http://example.com/video1",
-				SummaryURL: "http://example.com/summary1",
+				LessonID: uuid.New(),
+				CourseID: courseId,
+				Title:    "Lesson 1",
+				Summery:  "Description 1",
+				VideoURL: "http://example.com/video1",
+				Text:     "http://example.com/summary1",
 			},
 			{
-				LessonID:   uuid.New(),
-				CourseID:   courseId,
-				Title:      "Lesson 2",
-				Desc:       "Description 2",
-				VideoURL:   "http://example.com/video2",
-				SummaryURL: "http://example.com/summary2",
+				LessonID: uuid.New(),
+				CourseID: courseId,
+				Title:    "Lesson 2",
+				Summery:  "Description 2",
+				VideoURL: "http://example.com/video2",
+				Text:     "http://example.com/summary2",
 			},
 		}
 
@@ -185,9 +185,9 @@ func TestPreloadRelationships(t *testing.T) {
 		for i, lesson := range lessons {
 			assert.Equal(t, lesson.LessonID, gotLessons[i].LessonID)
 			assert.Equal(t, lesson.Title, gotLessons[i].Title)
-			assert.Equal(t, lesson.Desc, gotLessons[i].Desc)
+			assert.Equal(t, lesson.Summery, gotLessons[i].Summery)
 			assert.Equal(t, lesson.VideoURL, gotLessons[i].VideoURL)
-			assert.Equal(t, lesson.SummaryURL, gotLessons[i].SummaryURL)
+			assert.Equal(t, lesson.Text, gotLessons[i].Text)
 		}
 	})
 

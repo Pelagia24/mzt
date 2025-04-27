@@ -44,7 +44,7 @@ type Course struct {
 	Title    string
 	Desc     string
 
-	Lessons           []Lesson  `gorm:"constraint:OnDelete:CASCADE;"`
+	Lessons           []Lesson           `gorm:"constraint:OnDelete:CASCADE;"`
 	CourseAssignments []CourseAssignment `gorm:"constraint:OnDelete:CASCADE;"`
 }
 
@@ -54,17 +54,17 @@ type CourseAssignment struct {
 	CourseID uuid.UUID `gorm:"type:uuid;not null"`
 	Progress uint
 
-	User   User   
-	Course Course 
+	User   User
+	Course Course
 }
 
 type Lesson struct {
-	LessonID   uuid.UUID `gorm:"type:uuid;primaryKey"`
-	CourseID   uuid.UUID `gorm:"type:uuid;not null"`
-	Title      string
-	Desc       string
-	VideoURL   string
-	SummaryURL string
+	LessonID uuid.UUID `gorm:"type:uuid;primaryKey"`
+	CourseID uuid.UUID `gorm:"type:uuid;not null"`
+	Title    string
+	Summery  string
+	VideoURL string
+	Text     string
 
 	Course Course
 }

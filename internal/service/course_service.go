@@ -75,12 +75,12 @@ func (s *CourseService) ListLessons(courseId uuid.UUID) ([]dto.LessonDto, error)
 	result := make([]dto.LessonDto, 0)
 	for _, lesson := range lessons {
 		result = append(result, dto.LessonDto{
-			LessonID:    lesson.LessonID,
-			CourseID:    lesson.CourseID,
-			Title:       lesson.Title,
-			Description: lesson.Desc,
-			VideoURL:    lesson.VideoURL,
-			SummaryURL:  lesson.SummaryURL,
+			LessonID: lesson.LessonID,
+			CourseID: lesson.CourseID,
+			Title:    lesson.Title,
+			Summery:  lesson.Summery,
+			VideoURL: lesson.VideoURL,
+			Text:     lesson.Text,
 		})
 	}
 	return result, nil
@@ -93,34 +93,34 @@ func (s *CourseService) GetLesson(lessonId uuid.UUID) (*dto.LessonDto, error) {
 	}
 
 	return &dto.LessonDto{
-		LessonID:    lesson.LessonID,
-		CourseID:    lesson.CourseID,
-		Title:       lesson.Title,
-		Description: lesson.Desc,
-		VideoURL:    lesson.VideoURL,
-		SummaryURL:  lesson.SummaryURL,
+		LessonID: lesson.LessonID,
+		CourseID: lesson.CourseID,
+		Title:    lesson.Title,
+		Summery:  lesson.Summery,
+		VideoURL: lesson.VideoURL,
+		Text:     lesson.Text,
 	}, nil
 }
 
 func (s *CourseService) CreateLesson(courseId uuid.UUID, lesson *dto.CreateLessonDto) error {
 	lessonEntity := &entity.Lesson{
-		LessonID:   uuid.New(),
-		CourseID:   courseId,
-		Title:      lesson.Title,
-		Desc:       lesson.Description,
-		VideoURL:   lesson.VideoURL,
-		SummaryURL: lesson.SummaryURL,
+		LessonID: uuid.New(),
+		CourseID: courseId,
+		Title:    lesson.Title,
+		Summery:  lesson.Description,
+		VideoURL: lesson.VideoURL,
+		Text:     lesson.SummaryURL,
 	}
 	return s.repo.AddLesson(lessonEntity)
 }
 
 func (s *CourseService) UpdateLesson(lessonId uuid.UUID, updated *dto.UpdateLessonDto) error {
 	lessonEntity := &entity.Lesson{
-		LessonID:   lessonId,
-		Title:      updated.Title,
-		Desc:       updated.Description,
-		VideoURL:   updated.VideoURL,
-		SummaryURL: updated.SummaryURL,
+		LessonID: lessonId,
+		Title:    updated.Title,
+		Summery:  updated.Description,
+		VideoURL: updated.VideoURL,
+		Text:     updated.SummaryURL,
 	}
 	return s.repo.UpdateLesson(lessonEntity)
 }

@@ -46,12 +46,12 @@ type LoginDto struct {
 }
 
 type LessonDto struct {
-	LessonID    uuid.UUID `json:"lesson_id"`
-	CourseID    uuid.UUID `json:"course_id"`
-	Title       string    `json:"title"`
-	Description string    `json:"description"`
-	VideoURL    string    `json:"video_url"`
-	SummaryURL  string    `json:"summary_url"`
+	LessonID uuid.UUID `json:"lesson_id"`
+	CourseID uuid.UUID `json:"course_id"`
+	Title    string    `json:"title"`
+	Summery  string    `json:"summery"`
+	VideoURL string    `json:"video_url"`
+	Text     string    `json:"text"`
 }
 
 type AssignUserToCourseDto struct {

@@ -22,7 +22,6 @@ func TestCourseRepository(t *testing.T) {
 	}})
 	repo.DB = db
 
-
 	t.Run("Create and Get Course", func(t *testing.T) {
 		course := &entity.Course{
 			CourseID: uuid.New(),
@@ -127,12 +126,12 @@ func TestLessonRepository(t *testing.T) {
 		require.NoError(t, err)
 
 		lesson := &entity.Lesson{
-			LessonID:   uuid.New(),
-			CourseID:   course.CourseID,
-			Title:      "Test Lesson",
-			Desc:       "Test Description",
-			VideoURL:   "http://example.com/video",
-			SummaryURL: "http://example.com/summary",
+			LessonID: uuid.New(),
+			CourseID: course.CourseID,
+			Title:    "Test Lesson",
+			Summery:  "Test Description",
+			VideoURL: "http://example.com/video",
+			Text:     "http://example.com/summary",
 		}
 
 		err = repo.AddLesson(lesson)
@@ -143,9 +142,9 @@ func TestLessonRepository(t *testing.T) {
 		assert.Equal(t, lesson.LessonID, gotLesson.LessonID)
 		assert.Equal(t, lesson.CourseID, gotLesson.CourseID)
 		assert.Equal(t, lesson.Title, gotLesson.Title)
-		assert.Equal(t, lesson.Desc, gotLesson.Desc)
+		assert.Equal(t, lesson.Summery, gotLesson.Summery)
 		assert.Equal(t, lesson.VideoURL, gotLesson.VideoURL)
-		assert.Equal(t, lesson.SummaryURL, gotLesson.SummaryURL)
+		assert.Equal(t, lesson.Text, gotLesson.Text)
 	})
 
 	t.Run("Update Lesson", func(t *testing.T) {
@@ -158,24 +157,24 @@ func TestLessonRepository(t *testing.T) {
 		require.NoError(t, err)
 
 		lesson := &entity.Lesson{
-			LessonID:   uuid.New(),
-			CourseID:   course.CourseID,
-			Title:      "Original Title",
-			Desc:       "Original Description",
-			VideoURL:   "http://example.com/video",
-			SummaryURL: "http://example.com/summary",
+			LessonID: uuid.New(),
+			CourseID: course.CourseID,
+			Title:    "Original Title",
+			Summery:  "Original Description",
+			VideoURL: "http://example.com/video",
+			Text:     "http://example.com/summary",
 		}
 
 		err = repo.AddLesson(lesson)
 		require.NoError(t, err)
 
 		updatedLesson := &entity.Lesson{
-			LessonID:   lesson.LessonID,
-			CourseID:   lesson.CourseID,
-			Title:      "Updated Title",
-			Desc:       "Updated Description",
-			VideoURL:   "http://example.com/video2",
-			SummaryURL: "http://example.com/summary2",
+			LessonID: lesson.LessonID,
+			CourseID: lesson.CourseID,
+			Title:    "Updated Title",
+			Summery:  "Updated Description",
+			VideoURL: "http://example.com/video2",
+			Text:     "http://example.com/summary2",
 		}
 
 		err = repo.UpdateLesson(updatedLesson)
@@ -184,9 +183,9 @@ func TestLessonRepository(t *testing.T) {
 		gotLesson, err := repo.GetLesson(lesson.LessonID)
 		require.NoError(t, err)
 		assert.Equal(t, updatedLesson.Title, gotLesson.Title)
-		assert.Equal(t, updatedLesson.Desc, gotLesson.Desc)
+		assert.Equal(t, updatedLesson.Summery, gotLesson.Summery)
 		assert.Equal(t, updatedLesson.VideoURL, gotLesson.VideoURL)
-		assert.Equal(t, updatedLesson.SummaryURL, gotLesson.SummaryURL)
+		assert.Equal(t, updatedLesson.Text, gotLesson.Text)
 	})
 
 	t.Run("Delete Lesson", func(t *testing.T) {
@@ -199,12 +198,12 @@ func TestLessonRepository(t *testing.T) {
 		require.NoError(t, err)
 
 		lesson := &entity.Lesson{
-			LessonID:   uuid.New(),
-			CourseID:   course.CourseID,
-			Title:      "Test Lesson",
-			Desc:       "Test Description",
-			VideoURL:   "http://example.com/video",
-			SummaryURL: "http://example.com/summary",
+			LessonID: uuid.New(),
+			CourseID: course.CourseID,
+			Title:    "Test Lesson",
+			Summery:  "Test Description",
+			VideoURL: "http://example.com/video",
+			Text:     "http://example.com/summary",
 		}
 
 		err = repo.AddLesson(lesson)
@@ -228,20 +227,20 @@ func TestLessonRepository(t *testing.T) {
 
 		lessons := []*entity.Lesson{
 			{
-				LessonID:   uuid.New(),
-				CourseID:   course.CourseID,
-				Title:      "Lesson 1",
-				Desc:       "Description 1",
-				VideoURL:   "http://example.com/video1",
-				SummaryURL: "http://example.com/summary1",
+				LessonID: uuid.New(),
+				CourseID: course.CourseID,
+				Title:    "Lesson 1",
+				Summery:  "Description 1",
+				VideoURL: "http://example.com/video1",
+				Text:     "http://example.com/summary1",
 			},
 			{
-				LessonID:   uuid.New(),
-				CourseID:   course.CourseID,
-				Title:      "Lesson 2",
-				Desc:       "Description 2",
-				VideoURL:   "http://example.com/video2",
-				SummaryURL: "http://example.com/summary2",
+				LessonID: uuid.New(),
+				CourseID: course.CourseID,
+				Title:    "Lesson 2",
+				Summery:  "Description 2",
+				VideoURL: "http://example.com/video2",
+				Text:     "http://example.com/summary2",
 			},
 		}
 

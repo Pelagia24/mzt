@@ -210,7 +210,7 @@ GET /courses
         {
             "course_id": "uuid.UUID",
             "name": "string",
-            "description": "string"
+            "desc": "string"
         }
     ]
 }
@@ -225,7 +225,7 @@ GET /courses/:course_id
 {
     "course_id": "uuid.UUID",
     "name": "string",
-    "description": "string"
+    "desc": "string"
 }
 ```
 
@@ -237,7 +237,7 @@ POST /courses
 ```json
 {
     "name": "string",
-    "description": "string",
+    "desc": "string",
     "price": "uint"
 }
 ```
@@ -250,7 +250,7 @@ PUT /courses/:course_id
 ```json
 {
     "name": "string",
-    "description": "string",
+    "desc": "string",
     "price": "uint"
 }
 ```
@@ -274,9 +274,9 @@ GET /courses/:course_id/lessons
             "lesson_id": "uuid.UUID",
             "course_id": "uuid.UUID",
             "title": "string",
-            "description": "string",
+            "desc": "string",
             "video_url": "string",
-            "summary_url": "string"
+            "text": "string"
         }
     ]
 }
@@ -292,9 +292,9 @@ GET /courses/:course_id/lessons/:lesson_id
     "lesson_id": "uuid.UUID",
     "course_id": "uuid.UUID",
     "title": "string",
-    "description": "string",
+    "desc": "string",
     "video_url": "string",
-    "summary_url": "string"
+    "text": "string"
 }
 ```
 
@@ -306,9 +306,9 @@ POST /courses/:course_id/lessons
 ```json
 {
     "title": "string",
-    "description": "string",
+    "desc": "string",
     "video_url": "string",
-    "summary_url": "string"
+    "text": "string"
 }
 ```
 
@@ -320,9 +320,9 @@ PUT /courses/:course_id/lessons/:lesson_id
 ```json
 {
     "title": "string",
-    "description": "string",
+    "desc": "string",
     "video_url": "string",
-    "summary_url": "string"
+    "text": "string"
 }
 ```
 
