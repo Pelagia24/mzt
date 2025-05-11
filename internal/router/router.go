@@ -43,6 +43,7 @@ func NewRouter(config *config.Config, handler *gin.Engine, authService *service.
 	{
 
 		usersGroup.GET("/me", r.Me)
+		usersGroup.GET("/me/courses", r.MyCourses)
 
 		// Admin routes
 		adminGroup := usersGroup.Group("")

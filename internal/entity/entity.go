@@ -52,8 +52,8 @@ type Course struct {
 // TODO also create payment repository
 type CourseAssignment struct {
 	CaID     uuid.UUID `gorm:"type:uuid;primaryKey"`
-	UserID   uuid.UUID `gorm:"type:uuid;not null"`
-	CourseID uuid.UUID `gorm:"type:uuid;not null"`
+	UserID   uuid.UUID `gorm:"type:uuid;not null;index:,unique,composite:idx_user_course"`
+	CourseID uuid.UUID `gorm:"type:uuid;not null;index:,unique,composite:idx_user_course"`
 	Progress uint
 
 	User   User

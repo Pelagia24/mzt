@@ -168,7 +168,28 @@ func (r *Router) DeleteLesson(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Lesson deleted successfully"})
 }
 
+func (r *Router) MyCourses(c *gin.Context) {
+	self, ok := c.Get("self")
+	if !ok {
+		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+		return
+	}
+	selfId, ok := self.(uuid.UUID)
+	if !ok {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Unknown sender"})
+		return
+	}
 
+	courses, err := r.courseService.ListUserCourses(selfId)
+
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Can't get user courses"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Lesson deleted successfully",
+		"courses": courses})
+}
 
 func (r *Router) ListUsersOnCourse(c *gin.Context) {
 	courseId := c.Param("course_id")

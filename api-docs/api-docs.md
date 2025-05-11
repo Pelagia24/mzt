@@ -121,6 +121,24 @@ GET /users/me
 }
 ```
 
+### Get User Courses 
+```
+GET /users/me/courses
+```
+
+```json
+{
+    "courses": [
+        {
+            "course_id": "uuid.UUID",
+            "name": "string",
+            "desc": "string"
+        }
+    ]
+}
+```
+
+
 ### Get Users (Admin Only)
 ```
 GET /users

@@ -127,6 +127,16 @@ func (m *MockCourseRepository) GetCourseAssignmentsByCourseId(courseId uuid.UUID
 	return assignments, nil
 }
 
+func (m *MockCourseRepository) GetCourseAssignmentsByUserId(userId uuid.UUID) ([]entity.CourseAssignment, error) {
+	assignments := make([]entity.CourseAssignment, 0)
+	if courseAssignments, exists := m.Assignments[userId]; exists {
+		for _, assignment := range courseAssignments {
+			assignments = append(assignments, *assignment)
+		}
+	}
+	return assignments, nil
+}
+
 func (m *MockCourseRepository) GetCourseAssignment(courseId uuid.UUID, userId uuid.UUID) (*entity.CourseAssignment, error) {
 	if courseAssignments, exists := m.Assignments[courseId]; exists {
 		if assignment, exists := courseAssignments[userId]; exists {

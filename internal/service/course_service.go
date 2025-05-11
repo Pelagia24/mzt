@@ -139,6 +139,23 @@ func (s *CourseService) AssignUserToCourse(courseId uuid.UUID, userId uuid.UUID)
 	return s.repo.CreateCourseAssignment(assignment)
 }
 
+func (s *CourseService) ListUserCourses(userId uuid.UUID) ([]dto.CourseDto, error) {
+	assignments, err := s.repo.GetCourseAssignmentsByUserId(userId)
+	if err != nil {
+		return nil, err
+	}
+	courses := make([]dto.CourseDto, 0)
+	for _, assignment := range assignments {
+		courses = append(courses, dto.CourseDto{
+			CourseID:    assignment.CourseID,
+			Name:        assignment.Course.Title,
+			Description: assignment.Course.Desc,
+		})
+	}
+
+	return courses, nil
+}
+
 func (s *CourseService) ListUsersOnCourse(courseId uuid.UUID) ([]dto.UserInfoAdminDto, error) {
 	assignments, err := s.repo.GetCourseAssignmentsByCourseId(courseId)
 	if err != nil {

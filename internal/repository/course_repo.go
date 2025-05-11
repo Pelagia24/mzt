@@ -22,6 +22,7 @@ type CourseRepository interface {
 	RemoveLesson(lessonId uuid.UUID) error
 	CreateCourseAssignment(assignment *entity.CourseAssignment) error
 	GetCourseAssignmentsByCourseId(courseId uuid.UUID) ([]entity.CourseAssignment, error)
+	GetCourseAssignmentsByUserId(userId uuid.UUID) ([]entity.CourseAssignment, error)
 	GetCourseAssignment(courseId, userId uuid.UUID) (*entity.CourseAssignment, error)
 	UpdateCourseAssignment(assignment *entity.CourseAssignment) error
 	DeleteCourseAssignment(courseId uuid.UUID, userId uuid.UUID) error
@@ -189,6 +190,14 @@ func (r *CourseRepo) DeleteCourseAssignment(courseId, userId uuid.UUID) error {
 func (r *CourseRepo) GetCourseAssignmentsByCourseId(courseId uuid.UUID) ([]entity.CourseAssignment, error) {
 	var assignments []entity.CourseAssignment
 	if err := r.DB.Where("course_id = ?", courseId).Find(&assignments).Error; err != nil {
+		return nil, err
+	}
+	return assignments, nil
+}
+
+func (r *CourseRepo) GetCourseAssignmentsByUserId(userId uuid.UUID) ([]entity.CourseAssignment, error) {
+	var assignments []entity.CourseAssignment
+	if err := r.DB.Preload("Course").Where("user_id = ?", userId).Find(&assignments).Error; err != nil {
 		return nil, err
 	}
 	return assignments, nil
