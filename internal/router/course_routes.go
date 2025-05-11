@@ -168,30 +168,7 @@ func (r *Router) DeleteLesson(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Lesson deleted successfully"})
 }
 
-func (r *Router) AssignUserToCourse(c *gin.Context) {
-	courseId := c.Param("course_id")
-	id, err := uuid.Parse(courseId)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid course ID"})
-		return
-	}
-	var payload dto.AssignUserToCourseDto
-	if err := c.ShouldBindJSON(&payload); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	userId, err := uuid.Parse(payload.UserId)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
-		return
-	}
-	err = r.courseService.AssignUserToCourse(id, userId)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{"message": "User enrolled to course successfully"})
-}
+
 
 func (r *Router) ListUsersOnCourse(c *gin.Context) {
 	courseId := c.Param("course_id")

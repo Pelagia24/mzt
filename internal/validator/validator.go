@@ -34,6 +34,7 @@ func (v *Validator) IsValidTelegram(telegram string) bool {
 	return re.MatchString(telegram)
 }
 
+// TODO adminka
 func (v *Validator) IsValidPhoneNumber(phone string) bool {
 	const phoneRegex = `^\+?\d{10,15}$`
 	re := regexp.MustCompile(phoneRegex)
@@ -50,7 +51,7 @@ func (v *Validator) IsValidPassword(passwd string) bool {
 }
 
 func (v *Validator) IsValidName(name string) bool {
-	validName := regexp.MustCompile(`^[A-Za-z]{2,}$`)
+	validName := regexp.MustCompile(`^[A-Za-zA-Яа-яЁё]{2,}$`)
 	return validName.MatchString(name)
 }
 

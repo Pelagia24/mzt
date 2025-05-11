@@ -155,7 +155,7 @@ func Migrate(r *repository.UserRepo) {
 					Title:    "HTML Structure and Semantics",
 					Summery:  "Learn about HTML5 elements and semantic markup",
 					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
-					Text:     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+					Text:     "HTML5 introduced a set of semantic elements that provide meaning to the structure of web pages. These elements help both browsers and developers understand the purpose of different sections of content. Key semantic elements include:\n\n- <header>: Represents introductory content\n- <nav>: Defines navigation links\n- <main>: Specifies the main content\n- <article>: Represents self-contained content\n- <section>: Defines a section in a document\n- <aside>: Represents content that is tangentially related\n- <footer>: Represents a footer for a section\n\nUsing semantic HTML improves accessibility, SEO, and makes your code more maintainable.",
 				},
 				{
 					LessonID: uuid.New(),
@@ -163,7 +163,7 @@ func Migrate(r *repository.UserRepo) {
 					Title:    "CSS Layouts and Flexbox",
 					Summery:  "Master CSS layouts using Flexbox and Grid",
 					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
-					Text:     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+					Text:     "Flexbox is a one-dimensional layout method for arranging items in rows or columns. Key concepts include:\n\n- flex-direction: Determines the main axis\n- justify-content: Aligns items along the main axis\n- align-items: Aligns items along the cross axis\n- flex-wrap: Controls whether items wrap to new lines\n- flex-grow: Determines how much an item can grow\n- flex-shrink: Determines how much an item can shrink\n- flex-basis: Sets the initial main size of an item\n\nFlexbox is perfect for creating responsive layouts and centering content.",
 				},
 				{
 					LessonID: uuid.New(),
@@ -171,7 +171,7 @@ func Migrate(r *repository.UserRepo) {
 					Title:    "Responsive Design",
 					Summery:  "Create responsive websites that work on all devices",
 					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
-					Text:     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+					Text:     "Responsive design ensures your website looks great on all devices. Key techniques include:\n\n- Media queries: Apply different styles based on screen size\n- Fluid layouts: Use relative units (%, em, rem)\n- Flexible images: Set max-width: 100%\n- Mobile-first approach: Design for mobile first, then enhance for larger screens\n- Viewport meta tag: Control the viewport's size and scale\n\nRemember to test your website on various devices and screen sizes.",
 				},
 			}
 		case "JavaScript Essentials":
@@ -182,7 +182,7 @@ func Migrate(r *repository.UserRepo) {
 					Title:    "JavaScript Basics",
 					Summery:  "Learn JavaScript fundamentals and syntax",
 					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
-					Text:     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+					Text:     "JavaScript is a versatile programming language. Key concepts include:\n\n- Variables and data types (let, const, var)\n- Operators and expressions\n- Control flow (if/else, switch, loops)\n- Functions and scope\n- Arrays and objects\n- Error handling (try/catch)\n\nUnderstanding these fundamentals is crucial for building interactive web applications.",
 				},
 				{
 					LessonID: uuid.New(),
@@ -190,7 +190,7 @@ func Migrate(r *repository.UserRepo) {
 					Title:    "DOM Manipulation",
 					Summery:  "Work with the Document Object Model",
 					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
-					Text:     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+					Text:     "The DOM (Document Object Model) represents the HTML document as a tree of objects. Key operations include:\n\n- Selecting elements (querySelector, getElementById)\n- Modifying content (innerHTML, textContent)\n- Changing attributes (setAttribute, classList)\n- Creating and removing elements (createElement, appendChild)\n- Event handling (addEventListener)\n\nDOM manipulation is essential for creating dynamic web applications.",
 				},
 				{
 					LessonID: uuid.New(),
@@ -198,7 +198,7 @@ func Migrate(r *repository.UserRepo) {
 					Title:    "Async JavaScript",
 					Summery:  "Master Promises, Async/Await, and Event Loop",
 					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
-					Text:     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+					Text:     "Asynchronous JavaScript is crucial for handling operations that take time. Key concepts include:\n\n- Callbacks and callback hell\n- Promises and Promise chaining\n- Async/await syntax\n- Event loop and microtasks\n- Error handling in async code\n\nUnderstanding async JavaScript is vital for building responsive applications.",
 				},
 			}
 		case "React.js Development":
@@ -209,7 +209,7 @@ func Migrate(r *repository.UserRepo) {
 					Title:    "React Components",
 					Summery:  "Learn about React components and props",
 					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
-					Text:     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+					Text:     "React components are the building blocks of React applications. Key concepts include:\n\n- Functional and class components\n- Props and prop types\n- Component composition\n- State and lifecycle methods\n- Conditional rendering\n\nComponents help create reusable, maintainable UI elements.",
 				},
 				{
 					LessonID: uuid.New(),
@@ -217,7 +217,7 @@ func Migrate(r *repository.UserRepo) {
 					Title:    "State Management",
 					Summery:  "Manage application state with React hooks",
 					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
-					Text:     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+					Text:     "State management is crucial in React applications. Key concepts include:\n\n- useState hook for local state\n- useEffect for side effects\n- useContext for global state\n- useReducer for complex state logic\n- Custom hooks for reusable logic\n\nProper state management leads to predictable and maintainable applications.",
 				},
 				{
 					LessonID: uuid.New(),
@@ -225,7 +225,7 @@ func Migrate(r *repository.UserRepo) {
 					Title:    "React Router",
 					Summery:  "Implement routing in React applications",
 					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
-					Text:     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+					Text:     "React Router enables navigation in single-page applications. Key concepts include:\n\n- Route configuration\n- Navigation with Link and useNavigate\n- Route parameters\n- Nested routes\n- Protected routes\n\nRouting is essential for creating multi-page experiences in single-page applications.",
 				},
 			}
 		case "Vue.js Mastery":
@@ -236,7 +236,7 @@ func Migrate(r *repository.UserRepo) {
 					Title:    "Vue Components",
 					Summery:  "Create and use Vue components",
 					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
-					Text:     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+					Text:     "Vue components are the foundation of Vue applications. Key concepts include:\n\n- Single-file components\n- Props and events\n- Component lifecycle\n- Computed properties\n- Watchers\n\nComponents help create modular and maintainable applications.",
 				},
 				{
 					LessonID: uuid.New(),
@@ -244,7 +244,7 @@ func Migrate(r *repository.UserRepo) {
 					Title:    "Vuex State Management",
 					Summery:  "Manage state with Vuex",
 					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
-					Text:     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+					Text:     "Vuex is Vue's official state management solution. Key concepts include:\n\n- State, getters, mutations, and actions\n- Modules for large applications\n- Vuex store configuration\n- State persistence\n- DevTools integration\n\nVuex helps manage complex application state effectively.",
 				},
 				{
 					LessonID: uuid.New(),
@@ -252,7 +252,7 @@ func Migrate(r *repository.UserRepo) {
 					Title:    "Vue Router",
 					Summery:  "Implement routing in Vue applications",
 					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
-					Text:     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+					Text:     "Vue Router provides routing capabilities to Vue applications. Key concepts include:\n\n- Route configuration\n- Navigation guards\n- Route meta fields\n- Nested routes\n- Dynamic route matching\n\nRouting is essential for creating multi-page experiences in Vue applications.",
 				},
 			}
 		case "TypeScript for Frontend":
@@ -263,7 +263,7 @@ func Migrate(r *repository.UserRepo) {
 					Title:    "TypeScript Basics",
 					Summery:  "Learn TypeScript fundamentals",
 					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
-					Text:     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+					Text:     "TypeScript adds static typing to JavaScript. Key concepts include:\n\n- Basic types (string, number, boolean)\n- Interfaces and type aliases\n- Generics\n- Type assertions\n- Type inference\n\nTypeScript helps catch errors early and improves code maintainability.",
 				},
 				{
 					LessonID: uuid.New(),
@@ -271,7 +271,7 @@ func Migrate(r *repository.UserRepo) {
 					Title:    "TypeScript with React",
 					Summery:  "Use TypeScript in React applications",
 					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
-					Text:     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+					Text:     "TypeScript enhances React development. Key concepts include:\n\n- Typing props and state\n- Generic components\n- Type definitions for hooks\n- Event handling types\n- Third-party library types\n\nTypeScript with React provides better type safety and developer experience.",
 				},
 				{
 					LessonID: uuid.New(),
@@ -279,7 +279,7 @@ func Migrate(r *repository.UserRepo) {
 					Title:    "TypeScript with Vue",
 					Summery:  "Use TypeScript in Vue applications",
 					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
-					Text:     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+					Text:     "TypeScript integration with Vue 3. Key concepts include:\n\n- Component typing\n- Props and emits typing\n- Composition API with TypeScript\n- Type definitions for Vuex\n- Type definitions for Vue Router\n\nTypeScript with Vue provides better type safety and developer experience.",
 				},
 			}
 		case "Frontend Testing":
@@ -290,7 +290,7 @@ func Migrate(r *repository.UserRepo) {
 					Title:    "Unit Testing",
 					Summery:  "Write unit tests for frontend code",
 					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
-					Text:     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+					Text:     "Unit testing is essential for frontend development. Key concepts include:\n\n- Jest testing framework\n- Test structure (describe, it, expect)\n- Mocking and stubbing\n- Snapshot testing\n- Test coverage\n\nUnit tests help ensure code quality and prevent regressions.",
 				},
 				{
 					LessonID: uuid.New(),
@@ -298,7 +298,7 @@ func Migrate(r *repository.UserRepo) {
 					Title:    "Integration Testing",
 					Summery:  "Test component interactions",
 					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
-					Text:     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+					Text:     "Integration testing verifies component interactions. Key concepts include:\n\n- Testing component integration\n- Mocking API calls\n- Testing user interactions\n- Testing state changes\n- Testing routing\n\nIntegration tests ensure components work together correctly.",
 				},
 				{
 					LessonID: uuid.New(),
@@ -306,7 +306,7 @@ func Migrate(r *repository.UserRepo) {
 					Title:    "E2E Testing",
 					Summery:  "End-to-end testing with Cypress",
 					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
-					Text:     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+					Text:     "End-to-end testing verifies the entire application. Key concepts include:\n\n- Cypress testing framework\n- Test structure and commands\n- Custom commands\n- Fixtures and stubs\n- Visual testing\n\nE2E tests ensure the application works as expected from a user's perspective.",
 				},
 			}
 		}

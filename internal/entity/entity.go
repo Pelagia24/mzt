@@ -48,6 +48,8 @@ type Course struct {
 	CourseAssignments []CourseAssignment `gorm:"constraint:OnDelete:CASCADE;"`
 }
 
+// TODO index on entries, refund if error
+// TODO also create payment repository
 type CourseAssignment struct {
 	CaID     uuid.UUID `gorm:"type:uuid;primaryKey"`
 	UserID   uuid.UUID `gorm:"type:uuid;not null"`
@@ -67,4 +69,7 @@ type Lesson struct {
 	Text     string
 
 	Course Course
+}
+
+type Payment struct {
 }

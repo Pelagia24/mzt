@@ -45,6 +45,7 @@ type LoginDto struct {
 	Password string `json:"password" binding:"required"`
 }
 
+// TODO summEry
 type LessonDto struct {
 	LessonID uuid.UUID `json:"lesson_id"`
 	CourseID uuid.UUID `json:"course_id"`
@@ -67,3 +68,4 @@ type CourseDto struct {
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
 }
+

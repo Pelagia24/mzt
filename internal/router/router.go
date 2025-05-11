@@ -10,18 +10,20 @@ import (
 )
 
 type Router struct {
-	authService   *service.UserService
-	courseService *service.CourseService
-	config        *config.Config
-	validator     *validator.Validator
+	authService    *service.UserService
+	courseService  *service.CourseService
+	paymentService *service.PaymentService
+	config         *config.Config
+	validator      *validator.Validator
 }
 
-func NewRouter(config *config.Config, handler *gin.Engine, authService *service.UserService, courseService *service.CourseService, MW *middleware.Middleware) *Router {
+func NewRouter(config *config.Config, handler *gin.Engine, authService *service.UserService, courseService *service.CourseService, paymentService *service.PaymentService, MW *middleware.Middleware) *Router {
 	r := &Router{
-		authService:   authService,
-		courseService: courseService,
-		config:        config,
-		validator:     validator.NewValidator(),
+		authService:    authService,
+		paymentService: paymentService,
+		courseService:  courseService,
+		config:         config,
+		validator:      validator.NewValidator(),
 	}
 
 	// Auth routes
@@ -61,10 +63,11 @@ func NewRouter(config *config.Config, handler *gin.Engine, authService *service.
 
 	// Course routes
 	coursesGroup := handler.Group("/api/v1/courses")
-	coursesGroup.GET("/", r.ListCourses)
 
 	coursesGroup.Use(MW.AuthMiddleware())
 	{
+		//TODO кривой слеш
+		coursesGroup.GET("/", r.ListCourses)
 
 		coursesGroup.GET("/:course_id", r.GetCourse)
 
@@ -97,7 +100,7 @@ func NewRouter(config *config.Config, handler *gin.Engine, authService *service.
 
 		usersOnCourseGroup := coursesGroup.Group("/:course_id/users")
 		{
-			usersOnCourseGroup.POST("/", r.AssignUserToCourse)
+			usersOnCourseGroup.POST("/", r.CreateCoursePayment)
 
 			usersOnCourseGroup.GET("/", MW.AdminVerificationMiddleware(), r.ListUsersOnCourse)
 
@@ -110,6 +113,11 @@ func NewRouter(config *config.Config, handler *gin.Engine, authService *service.
 
 			progressGroup.PUT("/", r.UpdateProgress)
 		}
+	}
+
+	webhookGroup := handler.Group("/api/v1/webhook/payments")
+	{
+		webhookGroup.POST(config.Equiring.SecretPath, r.YooWebhookHandler)
 	}
 
 	//handler.RunTLS(":443", "cert.pem", "key.pem")
