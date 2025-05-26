@@ -32,6 +32,9 @@ func setupTestDB(t *testing.T) *gorm.DB {
 		&entity.User{},
 		&entity.UserData{},
 		&entity.Auth{},
+		&entity.Payment{},
+		&entity.Event{},
+		&entity.CoursePrice{},
 	)
 	require.NoError(t, err)
 
@@ -42,6 +45,9 @@ func setupTestDB(t *testing.T) *gorm.DB {
 		&entity.User{},
 		&entity.UserData{},
 		&entity.Auth{},
+		&entity.Payment{},
+		&entity.Event{},
+		&entity.CoursePrice{},
 	)
 	require.NoError(t, err)
 
@@ -53,6 +59,9 @@ func setupTestDB(t *testing.T) *gorm.DB {
 			&entity.User{},
 			&entity.UserData{},
 			&entity.Auth{},
+			&entity.Payment{},
+			&entity.Event{},
+			&entity.CoursePrice{},
 		)
 		require.NoError(t, err)
 	})
