@@ -58,10 +58,12 @@ func NewRouter(config *config.Config, handler *gin.Engine, authService *service.
 
 	// Course routes
 	coursesGroup := handler.Group("/api/v1/courses")
+	openCoursesGroup := coursesGroup.Group("/")
+	openCoursesGroup.GET("/", r.ListCourses)
+
 	coursesGroup.Use(MW.AuthMiddleware())
 	{
 		// Course listing and details
-		coursesGroup.GET("/", r.ListCourses)
 		//TODO кривой слеш
 
 		coursesGroup.GET("/:course_id", r.GetCourse)
