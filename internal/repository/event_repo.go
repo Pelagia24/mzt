@@ -135,6 +135,7 @@ func (r *EventRepo) GetEventsByCourseId(courseId uuid.UUID) ([]dto.EventDto, err
 			Title:       event.Title,
 			Description: event.Description,
 			EventDate:   event.EventDate,
+			SecretInfo:  event.SecretInfo,
 		})
 	}
 	return result, nil
