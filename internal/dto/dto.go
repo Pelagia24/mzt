@@ -24,6 +24,17 @@ type RegistrationDto struct {
 	// ConfirmPassword string `json:"confirm_password" binding:"required"`
 }
 
+type PaymentDto struct {
+	PaymentID    uuid.UUID `json:"payment_id" binding:"required"`
+	UserID       uuid.UUID `json:"user_id" binding:"required"`
+	CourseID     uuid.UUID `json:"course_id" binding:"required"`
+	Amount       float64   `json:"amount" binding:"required"`
+	CurrencyCode string    `json:"currency_code" binding:"required"`
+	Date         time.Time `json:"date" binding:"required"`
+	Status       string    `json:"status" binding:"required"`
+	PaymentRef   string    `json:"payment_ref"`
+}
+
 type UserInfoDto struct {
 	Name        string    `json:"name" binding:"required"`
 	Birthdate   time.Time `json:"birthdate" binding:"required"`
@@ -75,7 +86,7 @@ type EventDto struct {
 	Title       string    `json:"title"`
 	Description string    `json:"description"`
 	EventDate   time.Time `json:"event_date"`
-	SecretInfo  string    `json:"secret_info,omitempty"`
+	SecretInfo  string    `json:"secret_info"`
 }
 
 type CreateEventDto struct {
@@ -92,4 +103,3 @@ type UpdateEventDto struct {
 	EventDate   time.Time `json:"event_date"`
 	SecretInfo  string    `json:"secret_info"`
 }
-

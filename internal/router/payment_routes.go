@@ -85,3 +85,21 @@ func (r *Router) CreateCoursePayment(c *gin.Context) {
 		"url":     result,
 	})
 }
+
+func (r *Router) GetUserTransactions(c *gin.Context) {
+	userID := c.Param("user_id")
+
+	userIDParsed, err := uuid.Parse(userID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+		return
+	}
+
+	transactions, err := r.paymentService.GetUserTransactions(userIDParsed)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, transactions)
+}

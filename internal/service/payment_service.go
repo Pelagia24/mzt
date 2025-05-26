@@ -145,3 +145,26 @@ func (s *PaymentService) GetCoursePrice(courseID uuid.UUID) (*entity.CoursePrice
 func (s *PaymentService) UpdatePaymentStatus(paymentID uuid.UUID, status string) error {
 	return s.paymentRepo.UpdatePaymentStatus(paymentID, status)
 }
+
+func (s *PaymentService) GetUserTransactions(userID uuid.UUID) ([]dto.PaymentDto, error) {
+	payments, err := s.paymentRepo.GetPaymentsByUserID(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	result := make([]dto.PaymentDto, 0, len(payments))
+	for _, payment := range payments {
+		result = append(result, dto.PaymentDto{
+			PaymentID:    payment.PaymentID,
+			UserID:       payment.UserID,
+			CourseID:     payment.CourseID,
+			Amount:       payment.Amount,
+			CurrencyCode: payment.CurrencyCode,
+			Date:         payment.CreatedAt,
+			Status:       payment.Status,
+			PaymentRef:   payment.PaymentRef,
+		})
+	}
+
+	return result, nil
+}

@@ -50,6 +50,7 @@ func NewRouter(config *config.Config, handler *gin.Engine, authService *service.
 		{
 			adminGroup.GET("/", r.GetUsers)
 			adminGroup.GET("/:user_id", r.Users)
+			adminGroup.GET("/:user_id/transactions", r.GetUserTransactions)
 			adminGroup.PUT("/:user_id", r.Users)
 			adminGroup.DELETE("/:user_id", r.Users)
 			adminGroup.GET("/:user_id/role", r.Role)

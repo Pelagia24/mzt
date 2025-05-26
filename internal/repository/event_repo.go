@@ -46,6 +46,7 @@ func (r *EventRepo) GetEvents() ([]dto.EventDto, error) {
 			Title:       event.Title,
 			Description: event.Description,
 			EventDate:   event.EventDate,
+			SecretInfo:  event.SecretInfo,
 		})
 	}
 	return result, nil
@@ -62,6 +63,7 @@ func (r *EventRepo) GetEvent(eventId uuid.UUID) (*dto.EventDto, error) {
 		Title:       event.Title,
 		Description: event.Description,
 		EventDate:   event.EventDate,
+		SecretInfo:  event.SecretInfo,
 	}, nil
 }
 

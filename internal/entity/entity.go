@@ -30,6 +30,7 @@ type User struct {
 	Auth              *Auth              `gorm:"constraint:OnDelete:CASCADE;"`
 	UserData          *UserData          `gorm:"constraint:OnDelete:CASCADE;"`
 	CourseAssignments []CourseAssignment `gorm:"constraint:OnDelete:CASCADE;"`
+	Payments          []Payment          `gorm:"constraint:OnDelete:CASCADE;"`
 }
 
 type Auth struct {
@@ -94,7 +95,7 @@ type Payment struct {
 	Status       string    `gorm:"not null;default:'pending'"`
 	PaymentRef   string    `gorm:"type:varchar(255)"`
 
-	User   User   
+	User   User
 	Course Course
 }
 
@@ -104,5 +105,5 @@ type CoursePrice struct {
 	Amount       float64   `gorm:"not null"`
 	CurrencyCode string    `gorm:"not null;default:'RUB'"`
 
-	Course Course 
+	Course Course
 }

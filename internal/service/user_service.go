@@ -133,6 +133,7 @@ func (s *UserService) GetUsers() ([]dto.UserInfoAdminDto, error) {
 				Name:     assignment.Course.Title,
 			})
 		}
+
 		result = append(result, dto.UserInfoAdminDto{
 			ID:                user.ID,
 			Name:              user.UserData.Name,
