@@ -18,9 +18,12 @@ func Migrate(r *repository.UserRepo) {
 		&entity.User{},
 		&entity.UserData{},
 		&entity.Auth{},
+		&entity.Payment{},
 		&entity.Course{},
 		&entity.CourseAssignment{},
 		&entity.Lesson{},
+		&entity.Event{},
+		&entity.CoursePrice{},
 	)
 	if err != nil {
 		panic(err)
@@ -31,53 +34,119 @@ func Migrate(r *repository.UserRepo) {
 		panic(err)
 	}
 
-	users := []*entity.User{
+	testUsers := []struct {
+		user     *entity.User
+		userData *entity.UserData
+		auth     *entity.Auth
+	}{
 		{
-			ID:         uuid.New(),
-			PasswdHash: string(adminPasswdHash),
-			Role:       1,
+			user: &entity.User{
+				ID:         uuid.New(),
+				PasswdHash: string(adminPasswdHash),
+				Role:       1,
+			},
+			userData: &entity.UserData{
+				Email:           "admin@example.com",
+				Name:            "Admin User",
+				Birthdate:       time.Date(1990, 1, 1, 0, 0, 0, 0, time.UTC),
+				PhoneNumber:     "+79001234567",
+				Telegram:        "@admin_user",
+				City:            "Moscow",
+				Age:             33,
+				Employment:      "Tech Lead",
+				IsBusinessOwner: "No",
+				PositionAtWork:  "Senior Developer",
+				MonthIncome:     150000,
+			},
+			auth: &entity.Auth{
+				Key: "admin_key",
+			},
 		},
 		{
-			ID:         uuid.New(),
-			PasswdHash: "test_hash2",
-			Role:       0,
+			user: &entity.User{
+				ID:         uuid.New(),
+				PasswdHash: "test_hash2",
+				Role:       0,
+			},
+			userData: &entity.UserData{
+				Email:           "student1@example.com",
+				Name:            "Иван Петров",
+				Birthdate:       time.Date(1995, 5, 15, 0, 0, 0, 0, time.UTC),
+				PhoneNumber:     "+79157894561",
+				Telegram:        "@ivan_petrov",
+				City:            "Saint Petersburg",
+				Age:             28,
+				Employment:      "Junior Developer",
+				IsBusinessOwner: "No",
+				PositionAtWork:  "Frontend Developer",
+				MonthIncome:     80000,
+			},
+			auth: &entity.Auth{
+				Key: "student1_key",
+			},
 		},
 		{
-			ID:         uuid.New(),
-			PasswdHash: "test_hash3",
-			Role:       0,
+			user: &entity.User{
+				ID:         uuid.New(),
+				PasswdHash: "test_hash3",
+				Role:       0,
+			},
+			userData: &entity.UserData{
+				Email:           "student2@example.com",
+				Name:            "Anna Smith",
+				Birthdate:       time.Date(1992, 8, 23, 0, 0, 0, 0, time.UTC),
+				PhoneNumber:     "+79269874563",
+				Telegram:        "@anna_smith",
+				City:            "Kazan",
+				Age:             31,
+				Employment:      "Business Owner",
+				IsBusinessOwner: "Yes",
+				PositionAtWork:  "CEO",
+				MonthIncome:     250000,
+			},
+			auth: &entity.Auth{
+				Key: "student2_key",
+			},
+		},
+		{
+			user: &entity.User{
+				ID:         uuid.New(),
+				PasswdHash: "test_hash4",
+				Role:       0,
+			},
+			userData: &entity.UserData{
+				Email:           "student3@example.com",
+				Name:            "Мария Иванова",
+				Birthdate:       time.Date(1998, 3, 10, 0, 0, 0, 0, time.UTC),
+				PhoneNumber:     "+79631234567",
+				Telegram:        "@maria_iv",
+				City:            "Novosibirsk",
+				Age:             25,
+				Employment:      "Student",
+				IsBusinessOwner: "No",
+				PositionAtWork:  "Intern",
+				MonthIncome:     45000,
+			},
+			auth: &entity.Auth{
+				Key: "student3_key",
+			},
 		},
 	}
 
 	createdUsers := make(map[string]*entity.User)
-	for i, user := range users {
-		email := "test" + fmt.Sprint(i) + "@example.com"
-
+	for _, tu := range testUsers {
 		var existingUserData entity.UserData
-		err = r.DB.Where("email = ?", email).First(&existingUserData).Error
+		err = r.DB.Where("email = ?", tu.userData.Email).First(&existingUserData).Error
 		if err != nil {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
-				userData := &entity.UserData{
-					UserID:      user.ID,
-					Email:       email,
-					Name:        "Test User " + fmt.Sprint(i),
-					Birthdate:   time.Now(),
-					PhoneNumber: "+1234567890",
-					Telegram:    "@test" + fmt.Sprint(i),
-					City:        "Test City",
-					Age:         25,
-					Employment:  "Test Company",
-				}
-				auth := &entity.Auth{
-					UserID: user.ID,
-					Key:    "test_key_" + fmt.Sprint(i),
-				}
+				tu.userData.UserID = tu.user.ID
+				tu.auth.UserID = tu.user.ID
 
-				err = r.CreateUser(user, userData, auth)
+				err = r.CreateUser(tu.user, tu.userData, tu.auth)
 				if err != nil {
 					panic(err)
 				}
-				createdUsers[email] = user
+				createdUsers[tu.userData.Email] = tu.user
 			} else {
 				panic(err)
 			}
@@ -87,7 +156,7 @@ func Migrate(r *repository.UserRepo) {
 			if err != nil {
 				panic(err)
 			}
-			createdUsers[email] = &existingUser
+			createdUsers[tu.userData.Email] = &existingUser
 		}
 	}
 
@@ -124,6 +193,65 @@ func Migrate(r *repository.UserRepo) {
 		},
 	}
 
+	events := []*entity.Event{
+		{
+			EventID:     uuid.New(),
+			CourseID:    courses[0].CourseID, 
+			Title:       "HTML5 Workshop",
+			Description: "Interactive workshop covering latest HTML5 features",
+			EventDate:   time.Now().Add(48 * time.Hour),
+			SecretInfo:  "Zoom Meeting ID: 123-456-789, Password: html5workshop",
+		},
+		{
+			EventID:     uuid.New(),
+			CourseID:    courses[0].CourseID,
+			Title:       "CSS Grid Masterclass",
+			Description: "Deep dive into CSS Grid layout system",
+			EventDate:   time.Now().Add(72 * time.Hour),
+			SecretInfo:  "Zoom Meeting ID: 987-654-321, Password: cssgrid",
+		},
+		{
+			EventID:     uuid.New(),
+			CourseID:    courses[1].CourseID, 
+			Title:       "JavaScript Debugging Session",
+			Description: "Learn advanced debugging techniques in JavaScript",
+			EventDate:   time.Now().Add(96 * time.Hour),
+			SecretInfo:  "Google Meet Link: meet.google.com/js-debug-123",
+		},
+		{
+			EventID:     uuid.New(),
+			CourseID:    courses[2].CourseID, 
+			Title:       "React Hooks Workshop",
+			Description: "Practical examples of React Hooks usage",
+			EventDate:   time.Now().Add(120 * time.Hour),
+			SecretInfo:  "Discord Server: discord.gg/react-hooks",
+		},
+		{
+			EventID:     uuid.New(),
+			CourseID:    courses[3].CourseID, 
+			Title:       "Vue 3 Composition API Demo",
+			Description: "Live demonstration of Vue 3 Composition API features",
+			EventDate:   time.Now().Add(144 * time.Hour),
+			SecretInfo:  "Slack Channel: #vue3-composition-api",
+		},
+		{
+			EventID:     uuid.New(),
+			CourseID:    courses[4].CourseID, 
+			Title:       "TypeScript Type System Deep Dive",
+			Description: "Advanced typing techniques in TypeScript",
+			EventDate:   time.Now().Add(168 * time.Hour),
+			SecretInfo:  "Microsoft Teams Link: teams.microsoft.com/ts-types",
+		},
+		{
+			EventID:     uuid.New(),
+			CourseID:    courses[5].CourseID, 
+			Title:       "Testing Best Practices",
+			Description: "Learn how to write effective frontend tests",
+			EventDate:   time.Now().Add(192 * time.Hour),
+			SecretInfo:  "Workshop Materials: github.com/frontend-testing-workshop",
+		},
+	}
+
 	createdCourses := make(map[string]*entity.Course)
 	for _, course := range courses {
 		var existingCourse entity.Course
@@ -140,6 +268,21 @@ func Migrate(r *repository.UserRepo) {
 			}
 		} else {
 			createdCourses[course.Title] = &existingCourse
+		}
+	}
+
+	for _, event := range events {
+		var existingEvent entity.Event
+		err = r.DB.Where("title = ?", event.Title).First(&existingEvent).Error
+		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				err = r.DB.Create(event).Error
+				if err != nil {
+					panic(err)
+				}
+			} else {
+				panic(err)
+			}
 		}
 	}
 
@@ -367,4 +510,131 @@ func Migrate(r *repository.UserRepo) {
 	}
 
 	fmt.Println("Template data migration completed successfully")
+
+	for _, course := range createdCourses {
+		var existingPrice entity.CoursePrice
+		err = r.DB.Where("course_id = ?", course.CourseID).First(&existingPrice).Error
+		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				var price float64
+				switch course.Title {
+				case "HTML & CSS Fundamentals":
+					price = 5000.00
+				case "JavaScript Essentials":
+					price = 7500.00
+				case "React.js Development":
+					price = 10000.00
+				case "Vue.js Mastery":
+					price = 9500.00
+				case "TypeScript for Frontend":
+					price = 8500.00
+				case "Frontend Testing":
+					price = 6000.00
+				default:
+					price = 5000.00
+				}
+
+				coursePrice := &entity.CoursePrice{
+					CourseID:     course.CourseID,
+					Amount:       price,
+					CurrencyCode: "RUB",
+				}
+				err = r.DB.Create(coursePrice).Error
+				if err != nil {
+					panic(err)
+				}
+				fmt.Printf("Created price %f for course %s\n", price, course.Title)
+			}
+		}
+	}
+
+	fmt.Println("Course price initialization completed")
+
+	payments := []struct {
+		userEmail   string
+		courseTitle string
+		amount      float64
+		status      string
+		paymentRef  string
+		createdDays int
+	}{
+		{
+			userEmail:   "student1@example.com",
+			courseTitle: "HTML & CSS Fundamentals",
+			amount:      5000.00,
+			status:      "completed",
+			paymentRef:  "pay_ref_1",
+			createdDays: -30,
+		},
+		{
+			userEmail:   "student1@example.com",
+			courseTitle: "JavaScript Essentials",
+			amount:      7500.00,
+			status:      "completed",
+			paymentRef:  "pay_ref_2",
+			createdDays: -20,
+		},
+		{
+			userEmail:   "student2@example.com",
+			courseTitle: "React.js Development",
+			amount:      10000.00,
+			status:      "completed",
+			paymentRef:  "pay_ref_3",
+			createdDays: -15,
+		},
+		{
+			userEmail:   "student2@example.com",
+			courseTitle: "TypeScript for Frontend",
+			amount:      8500.00,
+			status:      "completed",
+			paymentRef:  "pay_ref_4",
+			createdDays: -10,
+		},
+		{
+			userEmail:   "student3@example.com",
+			courseTitle: "HTML & CSS Fundamentals",
+			amount:      5000.00,
+			status:      "completed",
+			paymentRef:  "pay_ref_5",
+			createdDays: -5,
+		},
+		{
+			userEmail:   "student3@example.com",
+			courseTitle: "Vue.js Mastery",
+			amount:      9500.00,
+			status:      "pending",
+			paymentRef:  "pay_ref_6",
+			createdDays: -1,
+		},
+	}
+
+	for _, p := range payments {
+		user := createdUsers[p.userEmail]
+		course := createdCourses[p.courseTitle]
+		if user != nil && course != nil {
+			payment := &entity.Payment{
+				PaymentID:    uuid.New(),
+				UserID:       user.ID,
+				CourseID:     course.CourseID,
+				Amount:       p.amount,
+				CurrencyCode: "RUB",
+				CreatedAt:    time.Now().AddDate(0, 0, p.createdDays),
+				Status:       p.status,
+				PaymentRef:   p.paymentRef,
+			}
+
+			var existingPayment entity.Payment
+			err = r.DB.Where("payment_ref = ?", p.paymentRef).First(&existingPayment).Error
+			if err != nil {
+				if errors.Is(err, gorm.ErrRecordNotFound) {
+					err = r.DB.Create(payment).Error
+					if err != nil {
+						panic(err)
+					}
+				} else {
+					panic(err)
+				}
+			}
+		}
+	}
 }

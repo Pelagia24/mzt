@@ -1,29 +1,23 @@
-FROM golang:alpine AS builder
+FROM golang:1.23-alpine AS builder
 
 WORKDIR /app
 
-COPY go.mod .
-COPY go.sum .
+COPY go.mod go.sum ./
 
 RUN go mod download
 
 COPY . .
 
-RUN go build -o main ./cmd/main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o mzt-api ./cmd/main.go
 
 FROM alpine:latest
 
-RUN apk update && apk add --no-cache ca-certificates
+WORKDIR /app
 
-WORKDIR /
+RUN apk --no-cache add ca-certificates tzdata
 
-COPY --from=builder /app/.env .
+COPY --from=builder /app/mzt-api .
 
-COPY --from=builder /app/main .
+COPY ../.env .
 
-# COPY --from=builder /app/cert.pem .
-# COPY --from=builder /app/key.pem .
-
-EXPOSE 443
-
-CMD ["./main"]
+ENTRYPOINT ["/app/mzt-api"]

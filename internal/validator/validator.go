@@ -51,7 +51,7 @@ func (v *Validator) IsValidPassword(passwd string) bool {
 }
 
 func (v *Validator) IsValidName(name string) bool {
-	validName := regexp.MustCompile(`^[A-Za-zA-Яа-яЁё]{2,}$`)
+	validName := regexp.MustCompile(`^[A-Za-zА-Яа-яЁё\s\-]{2,}$`)
 	return validName.MatchString(name)
 }
 

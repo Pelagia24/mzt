@@ -69,3 +69,27 @@ type CourseDto struct {
 	Description string    `json:"description"`
 }
 
+type EventDto struct {
+	EventID     uuid.UUID `json:"event_id"`
+	CourseID    uuid.UUID `json:"course_id"`
+	Title       string    `json:"title"`
+	Description string    `json:"description"`
+	EventDate   time.Time `json:"event_date"`
+	SecretInfo  string    `json:"secret_info,omitempty"`
+}
+
+type CreateEventDto struct {
+	CourseID    uuid.UUID `json:"course_id" binding:"required"`
+	Title       string    `json:"title" binding:"required"`
+	Description string    `json:"description"`
+	EventDate   time.Time `json:"event_date" binding:"required"`
+	SecretInfo  string    `json:"secret_info"`
+}
+
+type UpdateEventDto struct {
+	Title       string    `json:"title"`
+	Description string    `json:"description"`
+	EventDate   time.Time `json:"event_date"`
+	SecretInfo  string    `json:"secret_info"`
+}
+

@@ -10,19 +10,22 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type Middleware struct {
-	config    *config.Config
-	repo      *repository.UserRepo
-	validator *validator.Validator
+	config     *config.Config
+	repo       *repository.UserRepo
+	courseRepo *repository.CourseRepo
+	validator  *validator.Validator
 }
 
-func NewMiddleware(config *config.Config, repo *repository.UserRepo) *Middleware {
+func NewMiddleware(config *config.Config, repo *repository.UserRepo, courseRepo *repository.CourseRepo) *Middleware {
 	return &Middleware{
-		config:    config,
-		repo:      repo,
-		validator: validator.NewValidator(),
+		config:     config,
+		repo:       repo,
+		courseRepo: courseRepo,
+		validator:  validator.NewValidator(),
 	}
 }
 
@@ -133,3 +136,35 @@ func (m *Middleware) AdminVerificationMiddleware() gin.HandlerFunc {
 // 		c.Next()
 // 	}
 // }
+
+func (m *Middleware) CourseEnrollmentMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		courseIDStr := c.Param("courseId")
+		if courseIDStr == "" {
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Course ID is required"})
+			return
+		}
+
+		courseID, err := uuid.Parse(courseIDStr)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Invalid course ID format"})
+			return
+		}
+
+		userID, exists := c.Get("self")
+		if !exists {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "User not authenticated"})
+			return
+		}
+
+		assignment, err := m.courseRepo.GetCourseAssignment(courseID, userID.(uuid.UUID))
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"error": "User is not enrolled in this course"})
+			return
+		}
+
+		c.Set("courseAssignment", assignment)
+
+		c.Next()
+	}
+}

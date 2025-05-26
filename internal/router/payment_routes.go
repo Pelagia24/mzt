@@ -20,14 +20,16 @@ func (r *Router) YooWebhookHandler(c *gin.Context) {
 	if webhook.Event == "payment.succeeded" && webhook.Object.Status == "succeeded" {
 		userID := webhook.Object.Metadata.UserID
 		courseID := webhook.Object.Metadata.CourseID
+		paymentID := webhook.Object.Metadata.PaymentID
 
+		// Parse UUIDs
 		userIDParsed, err := uuid.Parse(userID)
 		if err != nil {
 			//TODO handle this(i think log + notification somewhere)
 			c.JSON(http.StatusOK, gin.H{"status": "ok"})
 			return
-
 		}
+
 		courseIDParsed, err := uuid.Parse(courseID)
 		if err != nil {
 			//TODO handle this(i think log + notification somewhere)
@@ -35,18 +37,29 @@ func (r *Router) YooWebhookHandler(c *gin.Context) {
 			return
 		}
 
+		paymentIDParsed, err := uuid.Parse(paymentID)
+		if err != nil {
+			// Log but continue without payment update
+			// We should still assign the course
+		} else {
+			// Update payment status to succeeded
+			err = r.paymentService.UpdatePaymentStatus(paymentIDParsed, "succeeded")
+			if err != nil {
+				// Log the error but continue with course assignment
+			}
+		}
+
+		// Assign user to course
 		err = r.courseService.AssignUserToCourse(courseIDParsed, userIDParsed)
 		if err != nil {
 			c.JSON(http.StatusOK, gin.H{"status": "ok"})
 			return
-
 		}
 
 		c.JSON(http.StatusOK, gin.H{"status": "ok"})
 	} else {
 		c.JSON(http.StatusOK, gin.H{"status": "ok"})
 		return
-
 	}
 }
 
@@ -61,13 +74,14 @@ func (r *Router) CreateCoursePayment(c *gin.Context) {
 
 	userId := user.(uuid.UUID)
 
-	result, err := r.paymentService.CreateYooKassaPayment(userId.String(), courseId, "100")
+	// Using empty amount since it will be retrieved from the database
+	result, err := r.paymentService.CreateYooKassaPayment(userId.String(), courseId, "")
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"message": "User assigned to course successfully",
+		"message": "Payment initiated successfully",
 		"url":     result,
 	})
 }

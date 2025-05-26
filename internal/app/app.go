@@ -14,14 +14,17 @@ import (
 func Run(cfg *config.Config) {
 	userRepo := repository.NewUserRepo(cfg)
 	courseRepo := repository.NewCourseRepo(cfg)
+	eventRepo := repository.NewEventRepo(cfg)
+	paymentRepo := repository.NewPaymentRepo(cfg)
 
 	Migrate(userRepo)
 
 	authService := service.NewUserService(cfg, userRepo)
 	courseService := service.NewCourseService(cfg, courseRepo)
-	paymentService := service.NewPaymentService(cfg, courseRepo)
+	paymentService := service.NewPaymentService(cfg, courseRepo, paymentRepo)
+	eventService := service.NewEventService(cfg, eventRepo, courseRepo)
 
-	middleware := middleware.NewMiddleware(cfg, userRepo)
+	middleware := middleware.NewMiddleware(cfg, userRepo, courseRepo)
 
 	handler := gin.Default()
 
@@ -34,7 +37,7 @@ func Run(cfg *config.Config) {
 		MaxAge:           12 * 60 * 60,
 	}))
 
-	router.NewRouter(cfg, handler, authService, courseService, paymentService, middleware)
+	router.NewRouter(cfg, handler, authService, courseService, paymentService, eventService, middleware)
 	handler.Run(":8080")
 	//TODO server
 }
