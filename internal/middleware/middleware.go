@@ -117,7 +117,7 @@ func (m *Middleware) AdminVerificationMiddleware() gin.HandlerFunc {
 // 			return
 // 		}
 
-// 		user, err := m.repo.GetUserByEmail(userDto.Email)
+// 		user, err := m.repo.GetUserByEmail(userDto.Email)		
 // 		if err != nil {
 // 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "User not found"})
 // 			return

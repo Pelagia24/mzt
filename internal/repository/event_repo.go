@@ -125,7 +125,7 @@ func (r *EventRepo) DeleteEvent(eventId uuid.UUID) error {
 
 func (r *EventRepo) GetEventsByCourseId(courseId uuid.UUID) ([]dto.EventDto, error) {
 	var events []entity.Event
-	if err := r.DB.Where("course_id = ?", courseId).Find(&events).Error; err != nil {
+	if err := r.DB.Where("course_id = ?", courseId).Order("event_date asc").Find(&events).Error; err != nil {
 		return nil, err
 	}
 

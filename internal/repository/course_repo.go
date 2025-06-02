@@ -68,6 +68,31 @@ func (r *CourseRepo) UpdateCourse(courseId uuid.UUID, updated *dto.UpdateCourseD
 		return err
 	}
 
+	// Update or create price
+	var price entity.CoursePrice
+	if err := tx.Where("course_id = ?", courseId).First(&price).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			price = entity.CoursePrice{
+				CourseID:     courseId,
+				Amount:       float64(updated.Price),
+				CurrencyCode: "RUB",
+			}
+			if err := tx.Create(&price).Error; err != nil {
+				tx.Rollback()
+				return err
+			}
+		} else {
+			tx.Rollback()
+			return err
+		}
+	} else {
+		price.Amount = float64(updated.Price)
+		if err := tx.Save(&price).Error; err != nil {
+			tx.Rollback()
+			return err
+		}
+	}
+
 	return tx.Commit().Error
 }
 
@@ -106,14 +131,19 @@ func (r *CourseRepo) UpdateLesson(lesson *entity.Lesson) error {
 
 func (r *CourseRepo) GetCourse(courseId uuid.UUID) (*dto.CourseDto, error) {
 	var course entity.Course
-	if err := r.DB.First(&course, "course_id = ?", courseId).Error; err != nil {
+	if err := r.DB.Preload("Price").First(&course, "course_id = ?", courseId).Error; err != nil {
 		return nil, err
 	}
-	return &dto.CourseDto{
+	result := &dto.CourseDto{
 		CourseID:    course.CourseID,
 		Name:        course.Title,
 		Description: course.Desc,
-	}, nil
+	}
+	if course.Price != nil {
+		result.Price.Amount = course.Price.Amount
+		result.Price.CurrencyCode = course.Price.CurrencyCode
+	}
+	return result, nil
 }
 
 func (r *CourseRepo) GetLesson(lessonId uuid.UUID) (*entity.Lesson, error) {
@@ -126,17 +156,22 @@ func (r *CourseRepo) GetLesson(lessonId uuid.UUID) (*entity.Lesson, error) {
 
 func (r *CourseRepo) GetCourses() ([]dto.CourseDto, error) {
 	var courses []entity.Course
-	if err := r.DB.Find(&courses).Error; err != nil {
+	if err := r.DB.Preload("Price").Find(&courses).Error; err != nil {
 		return nil, err
 	}
 
 	result := make([]dto.CourseDto, 0)
 	for _, course := range courses {
-		result = append(result, dto.CourseDto{
+		courseDto := dto.CourseDto{
 			CourseID:    course.CourseID,
 			Name:        course.Title,
 			Description: course.Desc,
-		})
+		}
+		if course.Price != nil {
+			courseDto.Price.Amount = course.Price.Amount
+			courseDto.Price.CurrencyCode = course.Price.CurrencyCode
+		}
+		result = append(result, courseDto)
 	}
 	return result, nil
 }

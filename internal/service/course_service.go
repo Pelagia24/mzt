@@ -54,6 +54,10 @@ func (s *CourseService) CreateCourse(course *dto.CreateCourseDto) error {
 		CourseID: uuid.New(),
 		Title:    course.Name,
 		Desc:     course.Description,
+		Price: &entity.CoursePrice{
+			Amount:       float64(course.Price),
+			CurrencyCode: "RUB",
+		},
 	}
 	return s.repo.AddCourse(courseEntity)
 }

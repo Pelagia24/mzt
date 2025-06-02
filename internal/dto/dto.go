@@ -78,6 +78,10 @@ type CourseDto struct {
 	CourseID    uuid.UUID `json:"course_id"`
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
+	Price       struct {
+		Amount       float64 `json:"amount"`
+		CurrencyCode string  `json:"currency_code"`
+	} `json:"price"`
 }
 
 type EventDto struct {

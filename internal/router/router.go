@@ -65,7 +65,6 @@ func NewRouter(config *config.Config, handler *gin.Engine, authService *service.
 	coursesGroup.Use(MW.AuthMiddleware())
 	{
 		// Course listing and details
-		//TODO кривой слеш
 
 		coursesGroup.GET("/:course_id", r.GetCourse)
 		coursesGroupAdmin := coursesGroup.Group("")

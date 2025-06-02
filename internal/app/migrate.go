@@ -163,92 +163,92 @@ func Migrate(r *repository.UserRepo) {
 	courses := []*entity.Course{
 		{
 			CourseID: uuid.New(),
-			Title:    "HTML & CSS Fundamentals",
-			Desc:     "Learn the building blocks of web development with HTML5 and CSS3",
+			Title:    "Эмоциональный интеллект и коммуникация",
+			Desc:     "Развитие эмоционального интеллекта, управление негативными эмоциями и развитие коммуникативных навыков лидера",
 		},
 		{
 			CourseID: uuid.New(),
-			Title:    "JavaScript Essentials",
-			Desc:     "Master JavaScript programming from basics to advanced concepts",
+			Title:    "Стратегическое лидерство",
+			Desc:     "Формирование траектории личного развития руководителя и основы установления долгосрочных взаимоотношений с ЛПР",
 		},
 		{
 			CourseID: uuid.New(),
-			Title:    "React.js Development",
-			Desc:     "Build modern web applications with React.js",
+			Title:    "Стресс и Energy Management",
+			Desc:     "Управление стрессом и психо-эмоциональным состоянием, техники повышения личной эффективности",
 		},
 		{
 			CourseID: uuid.New(),
-			Title:    "Vue.js Mastery",
-			Desc:     "Create reactive user interfaces with Vue.js",
+			Title:    "Самодисциплина и мотивация",
+			Desc:     "Система личной мотивации, самодисциплина и эффективное планирование времени",
 		},
 		{
 			CourseID: uuid.New(),
-			Title:    "TypeScript for Frontend",
-			Desc:     "Add type safety to your JavaScript code with TypeScript",
+			Title:    "Высокоэффективные команды",
+			Desc:     "8 ключей личной эффективности руководителя и создание сильных команд",
 		},
 		{
 			CourseID: uuid.New(),
-			Title:    "Frontend Testing",
-			Desc:     "Learn testing strategies for frontend applications",
+			Title:    "Коучинг в управлении",
+			Desc:     "Коучинговый подход в управлении командой и развитие психоэмоциональной устойчивости лидера",
 		},
 	}
 
 	events := []*entity.Event{
 		{
 			EventID:     uuid.New(),
-			CourseID:    courses[0].CourseID, 
-			Title:       "HTML5 Workshop",
-			Description: "Interactive workshop covering latest HTML5 features",
+			CourseID:    courses[0].CourseID,
+			Title:       "Эмоциональный интеллект и коммуникация",
+			Description: "Управление негативными эмоциями, развитие коммуникативных навыков лидера. Практические инструменты для развития EQ.",
 			EventDate:   time.Now().Add(48 * time.Hour),
-			SecretInfo:  "Zoom Meeting ID: 123-456-789, Password: html5workshop",
+			SecretInfo:  "Zoom Meeting ID: 123-456-789, Password: eqleader",
 		},
 		{
 			EventID:     uuid.New(),
 			CourseID:    courses[0].CourseID,
-			Title:       "CSS Grid Masterclass",
-			Description: "Deep dive into CSS Grid layout system",
+			Title:       "Стратегия личного развития лидера",
+			Description: "Формирование траектории личного развития руководителя без морального выгорания и потери фокуса внимания",
 			EventDate:   time.Now().Add(72 * time.Hour),
-			SecretInfo:  "Zoom Meeting ID: 987-654-321, Password: cssgrid",
+			SecretInfo:  "Zoom Meeting ID: 987-654-321, Password: strategy",
 		},
 		{
 			EventID:     uuid.New(),
-			CourseID:    courses[1].CourseID, 
-			Title:       "JavaScript Debugging Session",
-			Description: "Learn advanced debugging techniques in JavaScript",
+			CourseID:    courses[1].CourseID,
+			Title:       "Управление влиянием и стресс-менеджмент",
+			Description: "Основы установления долгосрочных взаимоотношений с ЛПР и техники управления стрессом",
 			EventDate:   time.Now().Add(96 * time.Hour),
-			SecretInfo:  "Google Meet Link: meet.google.com/js-debug-123",
+			SecretInfo:  "Google Meet Link: meet.google.com/influence-123",
 		},
 		{
 			EventID:     uuid.New(),
-			CourseID:    courses[2].CourseID, 
-			Title:       "React Hooks Workshop",
-			Description: "Practical examples of React Hooks usage",
+			CourseID:    courses[2].CourseID,
+			Title:       "Energy Management и самодисциплина",
+			Description: "Осознанный подход к управлению психо-эмоциональным состоянием и система личной мотивации",
 			EventDate:   time.Now().Add(120 * time.Hour),
-			SecretInfo:  "Discord Server: discord.gg/react-hooks",
+			SecretInfo:  "Discord Server: discord.gg/energy-management",
 		},
 		{
 			EventID:     uuid.New(),
-			CourseID:    courses[3].CourseID, 
-			Title:       "Vue 3 Composition API Demo",
-			Description: "Live demonstration of Vue 3 Composition API features",
+			CourseID:    courses[3].CourseID,
+			Title:       "Эффективное планирование и тайм-менеджмент",
+			Description: "Система эффективного планирования и ключевые инструменты тайм-менеджмента",
 			EventDate:   time.Now().Add(144 * time.Hour),
-			SecretInfo:  "Slack Channel: #vue3-composition-api",
+			SecretInfo:  "Slack Channel: #time-management",
 		},
 		{
 			EventID:     uuid.New(),
-			CourseID:    courses[4].CourseID, 
-			Title:       "TypeScript Type System Deep Dive",
-			Description: "Advanced typing techniques in TypeScript",
+			CourseID:    courses[4].CourseID,
+			Title:       "Создание высокоэффективных команд",
+			Description: "8 ключей личной эффективности руководителя и принципы создания сильных команд",
 			EventDate:   time.Now().Add(168 * time.Hour),
-			SecretInfo:  "Microsoft Teams Link: teams.microsoft.com/ts-types",
+			SecretInfo:  "Microsoft Teams Link: teams.microsoft.com/team-building",
 		},
 		{
 			EventID:     uuid.New(),
-			CourseID:    courses[5].CourseID, 
-			Title:       "Testing Best Practices",
-			Description: "Learn how to write effective frontend tests",
+			CourseID:    courses[5].CourseID,
+			Title:       "Коучинговый подход в лидерстве",
+			Description: "Коучинговый подход в управлении командой и развитие психоэмоциональной устойчивости лидера",
 			EventDate:   time.Now().Add(192 * time.Hour),
-			SecretInfo:  "Workshop Materials: github.com/frontend-testing-workshop",
+			SecretInfo:  "Workshop Materials: leadership-coaching.com/materials",
 		},
 	}
 
@@ -290,166 +290,166 @@ func Migrate(r *repository.UserRepo) {
 		var lessons []*entity.Lesson
 
 		switch course.Title {
-		case "HTML & CSS Fundamentals":
+		case "Эмоциональный интеллект и коммуникация":
 			lessons = []*entity.Lesson{
 				{
 					LessonID: uuid.New(),
 					CourseID: course.CourseID,
-					Title:    "HTML Structure and Semantics",
-					Summery:  "Learn about HTML5 elements and semantic markup",
-					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
-					Text:     "HTML5 introduced a set of semantic elements that provide meaning to the structure of web pages. These elements help both browsers and developers understand the purpose of different sections of content. Key semantic elements include:\n\n- <header>: Represents introductory content\n- <nav>: Defines navigation links\n- <main>: Specifies the main content\n- <article>: Represents self-contained content\n- <section>: Defines a section in a document\n- <aside>: Represents content that is tangentially related\n- <footer>: Represents a footer for a section\n\nUsing semantic HTML improves accessibility, SEO, and makes your code more maintainable.",
+					Title:    "Основы эмоционального интеллекта",
+					Summery:  "Понимание и развитие эмоционального интеллекта в лидерстве",
+					VideoURL: "https://www.youtube.com/embed/re5QbW8-Zz4",
+					Text:     "Эмоциональный интеллект (EQ) - ключевой навык современного лидера. Основные компоненты:\n\n- Самосознание: понимание своих эмоций\n- Самоконтроль: управление своими эмоциями\n- Социальная осведомленность: понимание эмоций других\n- Управление отношениями: выстраивание эффективных коммуникаций\n\nРазвитый EQ помогает лидеру лучше понимать свою команду и принимать более взвешенные решения.",
 				},
 				{
 					LessonID: uuid.New(),
 					CourseID: course.CourseID,
-					Title:    "CSS Layouts and Flexbox",
-					Summery:  "Master CSS layouts using Flexbox and Grid",
-					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
-					Text:     "Flexbox is a one-dimensional layout method for arranging items in rows or columns. Key concepts include:\n\n- flex-direction: Determines the main axis\n- justify-content: Aligns items along the main axis\n- align-items: Aligns items along the cross axis\n- flex-wrap: Controls whether items wrap to new lines\n- flex-grow: Determines how much an item can grow\n- flex-shrink: Determines how much an item can shrink\n- flex-basis: Sets the initial main size of an item\n\nFlexbox is perfect for creating responsive layouts and centering content.",
+					Title:    "Управление негативными эмоциями",
+					Summery:  "Техники работы с негативными эмоциями в лидерстве",
+					VideoURL: "https://www.youtube.com/embed/re5QbW8-Zz4",
+					Text:     "Управление негативными эмоциями - важный навык лидера. Ключевые техники:\n\n- Распознавание триггеров\n- Техники быстрой саморегуляции\n- Конструктивное выражение эмоций\n- Превращение негатива в мотивацию\n- Работа с эмоциональным выгоранием\n\nЭффективное управление негативными эмоциями позволяет сохранять ясность мышления и принимать взвешенные решения.",
 				},
 				{
 					LessonID: uuid.New(),
 					CourseID: course.CourseID,
-					Title:    "Responsive Design",
-					Summery:  "Create responsive websites that work on all devices",
-					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
-					Text:     "Responsive design ensures your website looks great on all devices. Key techniques include:\n\n- Media queries: Apply different styles based on screen size\n- Fluid layouts: Use relative units (%, em, rem)\n- Flexible images: Set max-width: 100%\n- Mobile-first approach: Design for mobile first, then enhance for larger screens\n- Viewport meta tag: Control the viewport's size and scale\n\nRemember to test your website on various devices and screen sizes.",
+					Title:    "Развитие коммуникативных навыков",
+					Summery:  "Эффективные коммуникации в лидерстве",
+					VideoURL: "https://www.youtube.com/embed/re5QbW8-Zz4",
+					Text:     "Коммуникативные навыки - основа успешного лидерства. Ключевые аспекты:\n\n- Активное слушание\n- Эмпатическое общение\n- Обратная связь\n- Невербальная коммуникация\n- Публичные выступления\n\nРазвитые коммуникативные навыки помогают выстраивать доверительные отношения в команде.",
 				},
 			}
-		case "JavaScript Essentials":
+		case "Стратегическое лидерство":
 			lessons = []*entity.Lesson{
 				{
 					LessonID: uuid.New(),
 					CourseID: course.CourseID,
-					Title:    "JavaScript Basics",
-					Summery:  "Learn JavaScript fundamentals and syntax",
-					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
-					Text:     "JavaScript is a versatile programming language. Key concepts include:\n\n- Variables and data types (let, const, var)\n- Operators and expressions\n- Control flow (if/else, switch, loops)\n- Functions and scope\n- Arrays and objects\n- Error handling (try/catch)\n\nUnderstanding these fundamentals is crucial for building interactive web applications.",
+					Title:    "Личная стратегия развития",
+					Summery:  "Формирование траектории личного развития руководителя",
+					VideoURL: "https://www.youtube.com/embed/re5QbW8-Zz4",
+					Text:     "Стратегия личного развития - фундамент успешного лидерства. Основные элементы:\n\n- Анализ текущих компетенций\n- Постановка целей развития\n- Планирование этапов роста\n- Выбор инструментов развития\n- Оценка прогресса\n\nЧеткая стратегия развития помогает лидеру расти без потери фокуса и выгорания.",
 				},
 				{
 					LessonID: uuid.New(),
 					CourseID: course.CourseID,
-					Title:    "DOM Manipulation",
-					Summery:  "Work with the Document Object Model",
-					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
-					Text:     "The DOM (Document Object Model) represents the HTML document as a tree of objects. Key operations include:\n\n- Selecting elements (querySelector, getElementById)\n- Modifying content (innerHTML, textContent)\n- Changing attributes (setAttribute, classList)\n- Creating and removing elements (createElement, appendChild)\n- Event handling (addEventListener)\n\nDOM manipulation is essential for creating dynamic web applications.",
+					Title:    "Управление влиянием",
+					Summery:  "Построение долгосрочных отношений с ЛПР",
+					VideoURL: "https://www.youtube.com/embed/re5QbW8-Zz4",
+					Text:     "Управление влиянием - ключевой навык в работе с ЛПР. Основные аспекты:\n\n- Построение авторитета\n- Networking стратегии\n- Техники убеждения\n- Управление репутацией\n- Развитие личного бренда\n\nЭффективное управление влиянием позволяет достигать целей через выстраивание прочных деловых отношений.",
 				},
 				{
 					LessonID: uuid.New(),
 					CourseID: course.CourseID,
-					Title:    "Async JavaScript",
-					Summery:  "Master Promises, Async/Await, and Event Loop",
-					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
-					Text:     "Asynchronous JavaScript is crucial for handling operations that take time. Key concepts include:\n\n- Callbacks and callback hell\n- Promises and Promise chaining\n- Async/await syntax\n- Event loop and microtasks\n- Error handling in async code\n\nUnderstanding async JavaScript is vital for building responsive applications.",
+					Title:    "Стратегическое мышление",
+					Summery:  "Развитие стратегического мышления лидера",
+					VideoURL: "https://www.youtube.com/embed/re5QbW8-Zz4",
+					Text:     "Стратегическое мышление - необходимый навык современного лидера. Ключевые компоненты:\n\n- Системный анализ\n- Прогнозирование\n- Принятие решений\n- Управление рисками\n- Стратегическое планирование\n\nРазвитое стратегическое мышление позволяет видеть большую картину и принимать эффективные решения.",
 				},
 			}
-		case "React.js Development":
+		case "Стресс и Energy Management":
 			lessons = []*entity.Lesson{
 				{
 					LessonID: uuid.New(),
 					CourseID: course.CourseID,
-					Title:    "React Components",
-					Summery:  "Learn about React components and props",
-					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
-					Text:     "React components are the building blocks of React applications. Key concepts include:\n\n- Functional and class components\n- Props and prop types\n- Component composition\n- State and lifecycle methods\n- Conditional rendering\n\nComponents help create reusable, maintainable UI elements.",
+					Title:    "Управление стрессом",
+					Summery:  "Техники управления стрессом для лидеров",
+					VideoURL: "https://www.youtube.com/embed/re5QbW8-Zz4",
+					Text:     "Управление стрессом - важный навык современного лидера. Основные техники:\n\n- Распознавание стресса\n- Техники быстрой релаксации\n- Управление энергией\n- Профилактика стресса\n- Восстановление после стресса\n\nЭффективное управление стрессом позволяет сохранять высокую производительность.",
 				},
 				{
 					LessonID: uuid.New(),
 					CourseID: course.CourseID,
-					Title:    "State Management",
-					Summery:  "Manage application state with React hooks",
-					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
-					Text:     "State management is crucial in React applications. Key concepts include:\n\n- useState hook for local state\n- useEffect for side effects\n- useContext for global state\n- useReducer for complex state logic\n- Custom hooks for reusable logic\n\nProper state management leads to predictable and maintainable applications.",
+					Title:    "Energy Management",
+					Summery:  "Управление энергией и психо-эмоциональным состоянием",
+					VideoURL: "https://www.youtube.com/embed/re5QbW8-Zz4",
+					Text:     "Energy Management - система управления личной энергией. Ключевые аспекты:\n\n- Физическая энергия\n- Эмоциональная энергия\n- Ментальная энергия\n- Духовная энергия\n- Баланс работы и отдыха\n\nГрамотное управление энергией - основа высокой эффективности лидера.",
 				},
 				{
 					LessonID: uuid.New(),
 					CourseID: course.CourseID,
-					Title:    "React Router",
-					Summery:  "Implement routing in React applications",
-					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
-					Text:     "React Router enables navigation in single-page applications. Key concepts include:\n\n- Route configuration\n- Navigation with Link and useNavigate\n- Route parameters\n- Nested routes\n- Protected routes\n\nRouting is essential for creating multi-page experiences in single-page applications.",
+					Title:    "Психо-эмоциональная устойчивость",
+					Summery:  "Развитие психо-эмоциональной устойчивости лидера",
+					VideoURL: "https://www.youtube.com/embed/re5QbW8-Zz4",
+					Text:     "Психо-эмоциональная устойчивость - ключ к стабильной работе лидера. Основные компоненты:\n\n- Эмоциональная гибкость\n- Стрессоустойчивость\n- Адаптивность\n- Ментальная прочность\n- Работа с неопределенностью\n\nРазвитая психо-эмоциональная устойчивость помогает сохранять эффективность в сложных ситуациях.",
 				},
 			}
-		case "Vue.js Mastery":
+		case "Самодисциплина и мотивация":
 			lessons = []*entity.Lesson{
 				{
 					LessonID: uuid.New(),
 					CourseID: course.CourseID,
-					Title:    "Vue Components",
-					Summery:  "Create and use Vue components",
-					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
-					Text:     "Vue components are the foundation of Vue applications. Key concepts include:\n\n- Single-file components\n- Props and events\n- Component lifecycle\n- Computed properties\n- Watchers\n\nComponents help create modular and maintainable applications.",
+					Title:    "Система личной мотивации",
+					Summery:  "Построение эффективной системы личной мотивации",
+					VideoURL: "https://www.youtube.com/embed/re5QbW8-Zz4",
+					Text:     "Личная мотивация - двигатель развития лидера. Ключевые элементы:\n\n- Определение ценностей\n- Постановка целей\n- Создание системы вознаграждений\n- Работа с демотивацией\n- Поддержание долгосрочной мотивации\n\nЭффективная система мотивации помогает достигать поставленных целей.",
 				},
 				{
 					LessonID: uuid.New(),
 					CourseID: course.CourseID,
-					Title:    "Vuex State Management",
-					Summery:  "Manage state with Vuex",
-					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
-					Text:     "Vuex is Vue's official state management solution. Key concepts include:\n\n- State, getters, mutations, and actions\n- Modules for large applications\n- Vuex store configuration\n- State persistence\n- DevTools integration\n\nVuex helps manage complex application state effectively.",
+					Title:    "Развитие самодисциплины",
+					Summery:  "Техники развития самодисциплины лидера",
+					VideoURL: "https://www.youtube.com/embed/re5QbW8-Zz4",
+					Text:     "Самодисциплина - основа личной эффективности. Основные аспекты:\n\n- Формирование привычек\n- Управление временем\n- Постановка приоритетов\n- Преодоление прокрастинации\n- Работа с отвлечениями\n\nРазвитая самодисциплина позволяет достигать целей и поддерживать высокую продуктивность.",
 				},
 				{
 					LessonID: uuid.New(),
 					CourseID: course.CourseID,
-					Title:    "Vue Router",
-					Summery:  "Implement routing in Vue applications",
-					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
-					Text:     "Vue Router provides routing capabilities to Vue applications. Key concepts include:\n\n- Route configuration\n- Navigation guards\n- Route meta fields\n- Nested routes\n- Dynamic route matching\n\nRouting is essential for creating multi-page experiences in Vue applications.",
+					Title:    "Эффективное планирование",
+					Summery:  "Система эффективного планирования времени",
+					VideoURL: "https://www.youtube.com/embed/re5QbW8-Zz4",
+					Text:     "Эффективное планирование - ключ к достижению целей. Основные техники:\n\n- Стратегическое планирование\n- Тактическое планирование\n- Приоритизация задач\n- Делегирование\n- Контроль выполнения\n\nГрамотное планирование помогает достигать максимальных результатов при оптимальных затратах ресурсов.",
 				},
 			}
-		case "TypeScript for Frontend":
+		case "Высокоэффективные команды":
 			lessons = []*entity.Lesson{
 				{
 					LessonID: uuid.New(),
 					CourseID: course.CourseID,
-					Title:    "TypeScript Basics",
-					Summery:  "Learn TypeScript fundamentals",
-					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
-					Text:     "TypeScript adds static typing to JavaScript. Key concepts include:\n\n- Basic types (string, number, boolean)\n- Interfaces and type aliases\n- Generics\n- Type assertions\n- Type inference\n\nTypeScript helps catch errors early and improves code maintainability.",
+					Title:    "8 ключей эффективности",
+					Summery:  "Ключевые принципы личной эффективности руководителя",
+					VideoURL: "https://www.youtube.com/embed/re5QbW8-Zz4",
+					Text:     "8 ключей эффективности руководителя:\n\n1. Проактивность\n2. Целеполагание\n3. Приоритизация\n4. Мышление Win-Win\n5. Эмпатическое слушание\n6. Синергия\n7. Непрерывное развитие\n8. Баланс жизни\n\nПрименение этих принципов помогает достигать максимальной эффективности в управлении.",
 				},
 				{
 					LessonID: uuid.New(),
 					CourseID: course.CourseID,
-					Title:    "TypeScript with React",
-					Summery:  "Use TypeScript in React applications",
-					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
-					Text:     "TypeScript enhances React development. Key concepts include:\n\n- Typing props and state\n- Generic components\n- Type definitions for hooks\n- Event handling types\n- Third-party library types\n\nTypeScript with React provides better type safety and developer experience.",
+					Title:    "Создание сильных команд",
+					Summery:  "Принципы формирования высокоэффективных команд",
+					VideoURL: "https://www.youtube.com/embed/re5QbW8-Zz4",
+					Text:     "Создание эффективной команды - ключевая задача лидера. Основные этапы:\n\n- Подбор участников\n- Формирование общего видения\n- Распределение ролей\n- Развитие коммуникации\n- Управление конфликтами\n\nПравильно построенная команда способна достигать выдающихся результатов.",
 				},
 				{
 					LessonID: uuid.New(),
 					CourseID: course.CourseID,
-					Title:    "TypeScript with Vue",
-					Summery:  "Use TypeScript in Vue applications",
-					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
-					Text:     "TypeScript integration with Vue 3. Key concepts include:\n\n- Component typing\n- Props and emits typing\n- Composition API with TypeScript\n- Type definitions for Vuex\n- Type definitions for Vue Router\n\nTypeScript with Vue provides better type safety and developer experience.",
+					Title:    "Развитие команды",
+					Summery:  "Методы развития и повышения эффективности команды",
+					VideoURL: "https://www.youtube.com/embed/re5QbW8-Zz4",
+					Text:     "Развитие команды - непрерывный процесс. Ключевые аспекты:\n\n- Обучение и развитие\n- Мотивация команды\n- Построение доверия\n- Управление результативностью\n- Создание культуры успеха\n\nПостоянное развитие команды - залог долгосрочного успеха организации.",
 				},
 			}
-		case "Frontend Testing":
+		case "Коучинг в управлении":
 			lessons = []*entity.Lesson{
 				{
 					LessonID: uuid.New(),
 					CourseID: course.CourseID,
-					Title:    "Unit Testing",
-					Summery:  "Write unit tests for frontend code",
-					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
-					Text:     "Unit testing is essential for frontend development. Key concepts include:\n\n- Jest testing framework\n- Test structure (describe, it, expect)\n- Mocking and stubbing\n- Snapshot testing\n- Test coverage\n\nUnit tests help ensure code quality and prevent regressions.",
+					Title:    "Основы коучингового подхода",
+					Summery:  "Применение коучинга в управлении командой",
+					VideoURL: "https://www.youtube.com/embed/re5QbW8-Zz4",
+					Text:     "Коучинговый подход в управлении - современный инструмент лидера. Основные принципы:\n\n- Партнерские отношения\n- Раскрытие потенциала\n- Постановка сильных вопросов\n- Фокус на решениях\n- Ответственность и осознанность\n\nКоучинговый подход помогает развивать самостоятельность и инициативность в команде.",
 				},
 				{
 					LessonID: uuid.New(),
 					CourseID: course.CourseID,
-					Title:    "Integration Testing",
-					Summery:  "Test component interactions",
-					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
-					Text:     "Integration testing verifies component interactions. Key concepts include:\n\n- Testing component integration\n- Mocking API calls\n- Testing user interactions\n- Testing state changes\n- Testing routing\n\nIntegration tests ensure components work together correctly.",
+					Title:    "Инструменты коучинга",
+					Summery:  "Практические инструменты коучинга в управлении",
+					VideoURL: "https://www.youtube.com/embed/re5QbW8-Zz4",
+					Text:     "Инструменты коучинга для эффективного управления. Ключевые техники:\n\n- Модель GROW\n- Шкалирование\n- Колесо баланса\n- Линия времени\n- Техника SMART\n\nПрименение коучинговых инструментов повышает эффективность управления командой.",
 				},
 				{
 					LessonID: uuid.New(),
 					CourseID: course.CourseID,
-					Title:    "E2E Testing",
-					Summery:  "End-to-end testing with Cypress",
-					VideoURL: "https://www.youtube.com/embed/MLpmiywRNzY",
-					Text:     "End-to-end testing verifies the entire application. Key concepts include:\n\n- Cypress testing framework\n- Test structure and commands\n- Custom commands\n- Fixtures and stubs\n- Visual testing\n\nE2E tests ensure the application works as expected from a user's perspective.",
+					Title:    "Развитие через коучинг",
+					Summery:  "Развитие команды через коучинговый подход",
+					VideoURL: "https://www.youtube.com/embed/re5QbW8-Zz4",
+					Text:     "Развитие команды через коучинг - эффективный подход к управлению. Основные аспекты:\n\n- Создание среды развития\n- Поддержка инициативы\n- Работа с целями\n- Обратная связь\n- Празднование успехов\n\nКоучинговый подход к развитию создает сильную и самостоятельную команду.",
 				},
 			}
 		}
@@ -474,17 +474,17 @@ func Migrate(r *repository.UserRepo) {
 		for _, course := range createdCourses {
 			progress := uint(0)
 			switch course.Title {
-			case "HTML & CSS Fundamentals":
+			case "Эмоциональный интеллект и коммуникация":
 				progress = 75
-			case "JavaScript Essentials":
+			case "Стратегическое лидерство":
 				progress = 50
-			case "React.js Development":
+			case "Стресс и Energy Management":
 				progress = 25
-			case "Vue.js Mastery":
+			case "Самодисциплина и мотивация":
 				progress = 0
-			case "TypeScript for Frontend":
+			case "Высокоэффективные команды":
 				progress = 100
-			case "Frontend Testing":
+			case "Коучинг в управлении":
 				progress = 30
 			}
 
@@ -518,17 +518,17 @@ func Migrate(r *repository.UserRepo) {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				var price float64
 				switch course.Title {
-				case "HTML & CSS Fundamentals":
+				case "Эмоциональный интеллект и коммуникация":
 					price = 5000.00
-				case "JavaScript Essentials":
+				case "Стратегическое лидерство":
 					price = 7500.00
-				case "React.js Development":
+				case "Стресс и Energy Management":
 					price = 10000.00
-				case "Vue.js Mastery":
+				case "Самодисциплина и мотивация":
 					price = 9500.00
-				case "TypeScript for Frontend":
+				case "Высокоэффективные команды":
 					price = 8500.00
-				case "Frontend Testing":
+				case "Коучинг в управлении":
 					price = 6000.00
 				default:
 					price = 5000.00
@@ -560,7 +560,7 @@ func Migrate(r *repository.UserRepo) {
 	}{
 		{
 			userEmail:   "student1@example.com",
-			courseTitle: "HTML & CSS Fundamentals",
+			courseTitle: "Эмоциональный интеллект и коммуникация",
 			amount:      5000.00,
 			status:      "completed",
 			paymentRef:  "pay_ref_1",
@@ -568,7 +568,7 @@ func Migrate(r *repository.UserRepo) {
 		},
 		{
 			userEmail:   "student1@example.com",
-			courseTitle: "JavaScript Essentials",
+			courseTitle: "Стратегическое лидерство",
 			amount:      7500.00,
 			status:      "completed",
 			paymentRef:  "pay_ref_2",
@@ -576,7 +576,7 @@ func Migrate(r *repository.UserRepo) {
 		},
 		{
 			userEmail:   "student2@example.com",
-			courseTitle: "React.js Development",
+			courseTitle: "Высокоэффективные команды",
 			amount:      10000.00,
 			status:      "completed",
 			paymentRef:  "pay_ref_3",
@@ -584,7 +584,7 @@ func Migrate(r *repository.UserRepo) {
 		},
 		{
 			userEmail:   "student2@example.com",
-			courseTitle: "TypeScript for Frontend",
+			courseTitle: "Коучинг в управлении",
 			amount:      8500.00,
 			status:      "completed",
 			paymentRef:  "pay_ref_4",
@@ -592,7 +592,7 @@ func Migrate(r *repository.UserRepo) {
 		},
 		{
 			userEmail:   "student3@example.com",
-			courseTitle: "HTML & CSS Fundamentals",
+			courseTitle: "Эмоциональный интеллект и коммуникация",
 			amount:      5000.00,
 			status:      "completed",
 			paymentRef:  "pay_ref_5",
@@ -600,7 +600,7 @@ func Migrate(r *repository.UserRepo) {
 		},
 		{
 			userEmail:   "student3@example.com",
-			courseTitle: "Vue.js Mastery",
+			courseTitle: "Самодисциплина и мотивация",
 			amount:      9500.00,
 			status:      "pending",
 			paymentRef:  "pay_ref_6",
