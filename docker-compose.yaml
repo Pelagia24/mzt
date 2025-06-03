@@ -78,3 +78,5 @@ networks:
 
 volumes:
   pg_data1:
+  certbot-etc:
+  certbot-var:
