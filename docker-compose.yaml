@@ -49,10 +49,10 @@ services:
     image: nginx:latest
     container_name: nginx
     volumes:
-      - ./nginx/conf:/etc/nginx/conf.d
       - certbot-etc:/etc/letsencrypt
       - certbot-var:/var/lib/letsencrypt
       - ./nginx/www:/var/www/certbot
+
     ports:
       - "80:80"
       - "443:443"
@@ -65,8 +65,10 @@ services:
     image: certbot/certbot
     container_name: mzt-certbot
     volumes:
-      - ../certbot/conf:/etc/letsencrypt
-      - ../certbot/www:/var/www/certbot
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - ./nginx/www:/var/www/certbot
+
     networks:
       - app-network
     depends_on:
