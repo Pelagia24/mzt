@@ -6,12 +6,6 @@ services:
     container_name: mzt-frontend
     environment:
       - NODE_ENV=production
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "http://localhost:3000"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
     networks:
       - app-network
     depends_on:
@@ -25,13 +19,6 @@ services:
         condition: service_healthy
     ports:
       - "8080:8080"
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "nc", "-z", "localhost", "8080"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 30s
     networks:
       - app-network
 
@@ -57,34 +44,33 @@ services:
     networks:
       - app-network
 
-  nginx:
-    image: nginx:alpine
-    container_name: mzt-nginx
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ../nginx/conf.d:/etc/nginx/conf.d
-      - ../nginx/ssl:/etc/nginx/ssl
-      - ../certbot/conf:/etc/letsencrypt
-      - ../certbot/www:/var/www/certbot
-    depends_on:
-      - frontend
-      - app
-    restart: unless-stopped
-    networks:
-      - app-network
 
-  certbot:
-    image: certbot/certbot
-    container_name: mzt-certbot
-    volumes:
-      - ../certbot/conf:/etc/letsencrypt
-      - ../certbot/www:/var/www/certbot
-    networks:
-      - app-network
-    depends_on:
-      - nginx
+nginx:
+  image: nginx:latest
+  container_name: nginx
+  volumes:
+    - ./nginx/conf:/etc/nginx/conf.d
+    - certbot-etc:/etc/letsencrypt
+    - certbot-var:/var/lib/letsencrypt
+    - ./nginx/www:/var/www/certbot
+  ports:
+    - "80:80"
+    - "443:443"
+  depends_on:
+    - backend
+    - frontend
+  restart: unless-stopped
+
+certbot:
+  image: certbot/certbot
+  container_name: mzt-certbot
+  volumes:
+    - ../certbot/conf:/etc/letsencrypt
+    - ../certbot/www:/var/www/certbot
+  networks:
+    - app-network
+  depends_on:
+    - nginx
 
 networks:
   app-network:
