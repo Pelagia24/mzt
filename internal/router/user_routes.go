@@ -233,8 +233,7 @@ func (r *Router) SignIn(c *gin.Context) {
 		return
 	}
 
-	// c.SetCookie("refresh_token", refresh, int(r.config.Jwt.RefreshExpiresIn.Seconds()), "/", "localhost", true, true)
-	c.SetCookie("refresh_token", refresh, int(r.config.Jwt.RefreshExpiresIn.Seconds()), "/", "localhost", false, true)
+	c.SetCookie("refresh_token", refresh, int(r.config.Jwt.RefreshExpiresIn.Seconds()), "/", r.config.Jwt.Domain, false, true)
 
 	c.JSON(http.StatusOK, gin.H{
 		"message":      "User signed in successfully",
@@ -305,7 +304,7 @@ func (r *Router) SignUp(c *gin.Context) {
 		return
 	}
 
-	c.SetCookie("refresh_token", refresh, int(r.config.Jwt.RefreshExpiresIn.Seconds()), "/", "localhost", false, true)
+	c.SetCookie("refresh_token", refresh, int(r.config.Jwt.RefreshExpiresIn.Seconds()), "/", r.config.Jwt.Domain, false, true)
 
 	c.JSON(http.StatusCreated, gin.H{
 		"message":      "User created successfully",
@@ -360,8 +359,8 @@ func (r *Router) Refresh(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
 	}
-	// c.SetCookie("refresh_token", refresh, int(r.config.Jwt.RefreshExpiresIn.Seconds()), "/", "localhost", true, true)
-	c.SetCookie("refresh_token", refresh, int(r.config.Jwt.RefreshExpiresIn.Seconds()), "/", "localhost", false, true)
+
+	c.SetCookie("refresh_token", refresh, int(r.config.Jwt.RefreshExpiresIn.Seconds()), "/", r.config.Jwt.Domain, false, true)
 
 	c.JSON(http.StatusOK, gin.H{
 		"message":      "Tokens refreshed successfully",
@@ -370,4 +369,32 @@ func (r *Router) Refresh(c *gin.Context) {
 		"role":         role,
 	})
 
+}
+
+// @Summary Logout user
+// @Description Logout user and invalidate refresh token
+// @Tags User
+// @Accept json
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /auth/logout [post]
+func (r *Router) Logout(c *gin.Context) {
+	user, ok := c.Get("self")
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not found"})
+		return
+	}
+
+	userId := user.(uuid.UUID)
+	err := r.authService.Logout(userId)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.SetCookie("refresh_token", "", -1, "/", r.config.Jwt.Domain, false, true)
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Logged out successfully",
+	})
 }

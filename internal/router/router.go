@@ -34,6 +34,7 @@ func NewRouter(config *config.Config, handler *gin.Engine, authService *service.
 		authHandler.POST("/signin", r.SignIn)
 		authHandler.POST("/signup", r.SignUp)
 		authHandler.POST("/refresh", r.Refresh)
+		authHandler.POST("/logout", MW.AuthMiddleware(), r.Logout)
 	}
 
 	// User routes

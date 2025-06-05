@@ -26,6 +26,7 @@ type Jwt struct {
 	RefreshKey       string        `mapstructure:"refresh_key"`
 	AccessExpiresIn  time.Duration `mapstructure:"access_expires_in"`
 	RefreshExpiresIn time.Duration `mapstructure:"refresh_expires_in"`
+	Domain           string        `mapstructure:"domain"`
 }
 
 type Equiring struct {
@@ -54,6 +55,7 @@ func NewConfig() *Config {
 			RefreshKey:       os.Getenv("JWT_REFRESH_KEY"),
 			AccessExpiresIn:  time.Minute * 30,
 			RefreshExpiresIn: time.Hour * 24 * 14,
+			Domain:           os.Getenv("DOMAIN"),
 		},
 		Equiring: Equiring{
 			StoreCode:   os.Getenv("EQUIRING_STORE_CODE"),

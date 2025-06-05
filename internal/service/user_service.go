@@ -267,3 +267,7 @@ func (s *UserService) generateTokens(email string) (access string, refresh strin
 
 	return access, refresh, nil
 }
+
+func (s *UserService) Logout(userId uuid.UUID) error {
+	return s.repo.UpdateToken(userId, "")
+}
