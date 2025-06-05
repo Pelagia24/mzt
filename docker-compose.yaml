@@ -1,17 +1,11 @@
-services:
-  frontend:
-    build:
-      context: ../mzt-frontend
-      dockerfile: Dockerfile
-    container_name: mzt-frontend
-    environment:
-      - NODE_ENV=production
-    networks:
-      - app-network
-    depends_on:
-      - app
+networks:
+  app-net:
+    external: true
+volumes:
+  pg_data1:
 
-  app:
+services:
+  backend:
     build: .
     container_name: mzt-app
     depends_on:
@@ -20,7 +14,7 @@ services:
     ports:
       - "8080:8080"
     networks:
-      - app-network
+      - app-net
 
   db:
     image: postgres:latest
@@ -42,43 +36,4 @@ services:
       timeout: 5s
       retries: 10
     networks:
-      - app-network
-
-
-  nginx:
-    image: nginx:latest
-    container_name: nginx
-    volumes:
-      - certbot-etc:/etc/letsencrypt
-      - certbot-var:/var/lib/letsencrypt
-      - ./nginx/www:/var/www/certbot
-
-    ports:
-      - "80:80"
-      - "443:443"
-    depends_on:
-      - app
-      - frontend
-    restart: unless-stopped
-
-  certbot:
-    image: certbot/certbot
-    container_name: mzt-certbot
-    volumes:
-      - certbot-etc:/etc/letsencrypt
-      - certbot-var:/var/lib/letsencrypt
-      - ./nginx/www:/var/www/certbot
-
-    networks:
-      - app-network
-    depends_on:
-      - nginx
-
-networks:
-  app-network:
-    driver: bridge
-
-volumes:
-  pg_data1:
-  certbot-etc:
-  certbot-var:
+      - app-net
