@@ -9,6 +9,8 @@ import (
 	"github.com/google/uuid"
 )
 
+// интерфейс для работы с курсами
+// определяет все методы которые нужны для работы с курсами
 type CourseServiceInterface interface {
 	ListCourses() ([]dto.CourseDto, error)
 	GetCourse(courseId uuid.UUID) (*dto.CourseDto, error)
@@ -29,11 +31,14 @@ type CourseServiceInterface interface {
 	UpdateProgress(courseId uuid.UUID, userId uuid.UUID, progress uint) error
 }
 
+// сервис для работы с курсами
+// реализует интерфейс CourseServiceInterface
 type CourseService struct {
 	config *config.Config
 	repo   repository.CourseRepository
 }
 
+// создаем новый сервис для работы с курсами(конструктор)
 func NewCourseService(cfg *config.Config, repo repository.CourseRepository) *CourseService {
 	return &CourseService{
 		config: cfg,

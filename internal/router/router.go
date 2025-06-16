@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// структура роутера содержит все сервисы и конфигурацию
 type Router struct {
 	authService    *service.UserService
 	courseService  *service.CourseService
@@ -18,6 +19,7 @@ type Router struct {
 	validator      *validator.Validator
 }
 
+// конструктор роутера
 func NewRouter(config *config.Config, handler *gin.Engine, authService *service.UserService, courseService *service.CourseService, paymentService *service.PaymentService, eventService *service.EventService, MW *middleware.Middleware) *Router {
 	r := &Router{
 		authService:    authService,
@@ -75,7 +77,7 @@ func NewRouter(config *config.Config, handler *gin.Engine, authService *service.
 			coursesGroupAdmin.PUT("/:course_id", r.UpdateCourse)
 			coursesGroupAdmin.DELETE("/:course_id", r.DeleteCourse)
 		}
-
+		//lessons group
 		lessonsGroup := coursesGroup.Group("/:course_id/lessons")
 		{
 			lessonsGroup.GET("/", r.ListLessons)
@@ -90,6 +92,7 @@ func NewRouter(config *config.Config, handler *gin.Engine, authService *service.
 			}
 		}
 
+		//event routes
 		eventsGroup := coursesGroup.Group("/:course_id/events")
 		{
 			eventsGroup.GET("/", r.GetEventsByCourse)

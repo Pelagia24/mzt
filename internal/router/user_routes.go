@@ -9,58 +9,52 @@ import (
 	"github.com/google/uuid"
 )
 
-// @Summary Get all users info(only admin)
-// @Description Gets all users
-// @Tags User
-// @Accept json
-// @Produce json
-// @Success 200 {object} map[string]interface{}
-// @Failure 400 {object} map[string]interface{}
-// @Failure 422 {object} map[string]interface{}
-// @Failure 500 {object} map[string]interface{}
-// @Router /users/ [get]
+// получает список всех пользователей
+// доступно только админам
 func (r *Router) GetUsers(c *gin.Context) {
+	// получаем список пользователей из сервиса
 	users, err := r.authService.GetUsers()
 	if err != nil {
+		// если что-то пошло не так, возвращаем ошибку
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Can't get users"})
 		return
 	}
 
+	// отправляем список пользователей клиенту
 	c.JSON(http.StatusOK, gin.H{
 		"message": "User infos",
 		"users":   users,
 	})
 }
 
-// @Summary Get user role by id
-// @Description Gets all users
-// @Tags User
-// @Accept json
-// @Produce json
-// @Success 200 {object} map[string]interface{}
-// @Failure 400 {object} map[string]interface{}
-// @Failure 422 {object} map[string]interface{}
-// @Failure 500 {object} map[string]interface{}
-// @Router /users/:user_id/role [get]
+// получает роль пользователя по его id
+// доступно только админам
 func (r *Router) Role(c *gin.Context) {
+	// достаем id пользователя из параметров запроса
 	userId := c.Param("user_id")
 	id, err := uuid.Parse(userId)
 	if err != nil {
+		// если id невалидный, возвращаем ошибку
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
 		return
 	}
+	// получаем роль пользователя из сервиса
 	role, err := r.authService.Role(id)
 	if err != nil || role == "" {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": "Can't get user role"})
 		return
 	}
+	// отправляем роль пользователя клиенту
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Role of user",
 		"role":    role,
 	})
 }
 
+// обрабатывает запросы на получение, обновление и удаление пользователя
+// доступно только админам
 func (r *Router) Users(c *gin.Context) {
+	// достаем id пользователя из параметров запроса
 	userId := c.Param("user_id")
 	id, err := uuid.Parse(userId)
 	if err != nil {
@@ -68,8 +62,10 @@ func (r *Router) Users(c *gin.Context) {
 		return
 	}
 
+	// в зависимости от метода запроса выполняем разные действия
 	switch c.Request.Method {
 	case http.MethodGet:
+		// получаем информацию о пользователе
 		user, err := r.authService.GetUser(id)
 		if err != nil {
 			c.JSON(http.StatusNotFound, gin.H{"error": "Can't get user"})
@@ -82,6 +78,7 @@ func (r *Router) Users(c *gin.Context) {
 		})
 
 	case http.MethodDelete:
+		// достаем id текущего пользователя из контекста
 		self, ok := c.Get("self")
 		if !ok {
 			c.JSON(http.StatusNotFound, gin.H{"error": "Unknown sender"})
@@ -94,11 +91,13 @@ func (r *Router) Users(c *gin.Context) {
 			return
 		}
 
+		// проверяем что пользователь не пытается удалить сам себя
 		if id == selfId {
 			c.JSON(http.StatusUnprocessableEntity, gin.H{"error": "Can't delete self"})
 			return
 		}
 
+		// удаляем пользователя через сервис
 		err = r.authService.DeleteUser(id)
 		if err != nil {
 			c.JSON(http.StatusUnprocessableEntity, gin.H{"error": "Can't delete user"})
@@ -107,72 +106,33 @@ func (r *Router) Users(c *gin.Context) {
 
 		c.JSON(http.StatusOK, gin.H{"message": "Deleted user with success"})
 	case http.MethodPut:
+		// парсим данные из тела запроса
 		var payload dto.UpdateUserDto
 		if err := c.ShouldBindJSON(&payload); err != nil {
+			// если данные невалидные, возвращаем ошибку
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 
+		// обновляем пользователя через сервис
 		err := r.authService.UpdateUser(id, &payload)
 		if err != nil {
 			c.JSON(http.StatusUnprocessableEntity, gin.H{"error": "Can't update user"})
 			return
 		}
 
+		// отправляем успешный response
 		c.JSON(http.StatusOK, gin.H{"message": "Updated user with success"})
 
 	default:
+		// если метод запроса не поддерживается, возвращаем ошибку
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid http method"})
 		return
 	}
 
 }
 
-// @Summary Update user by dto (only admin)
-// @Description Updates user
-// @Tags User
-// @Accept json
-// @Produce json
-// @Param user body dto.UpdateUserDto true "User to update"
-// @Success 200 {object} map[string]interface{}
-// @Failure 400 {object} map[string]interface{}
-// @Failure 422 {object} map[string]interface{}
-// @Failure 500 {object} map[string]interface{}
-// @Router /users/:user_id [put]
-func (r *Router) _UsersPut(c *gin.Context) {}
-
-// @Summary Get user by dto (only admin)
-// @Description Gets user
-// @Tags User
-// @Accept json
-// @Produce json
-// @Success 200 {object} map[string]interface{}
-// @Failure 404 {object} map[string]interface{}
-// @Failure 500 {object} map[string]interface{}
-// @Router /users/:user_id [get]
-func (r *Router) _UsersGet(c *gin.Context) {}
-
-// @Summary Delete user by dto (only admin)
-// @Description Deletes user
-// @Tags User
-// @Accept json
-// @Produce json
-// @Success 200 {object} map[string]interface{}
-// @Failure 404 {object} map[string]interface{}
-// @Failure 422 {object} map[string]interface{}
-// @Failure 500 {object} map[string]interface{}
-// @Router /users/:user_id [delete]
-func (r *Router) _UsersDelete(c *gin.Context) {}
-
-// @Summary Get user profile
-// @Description Get user profile
-// @Tags User
-// @Accept json
-// @Produce json
-// @Success 200 {object} map[string]interface{}
-// @Failure 404 {object} map[string]interface{}
-// @Failure 500 {object} map[string]interface{}
-// @Router /users/me [get]
+// получает профиль текущего пользователя
 func (r *Router) Me(c *gin.Context) {
 	user, ok := c.Get("user")
 	if !ok {
@@ -242,7 +202,7 @@ func (r *Router) SignIn(c *gin.Context) {
 	})
 }
 
-// SignUp регистрирует нового пользователя
+// регистрирует нового пользователя
 // проверяет все поля и создает аккаунт если все ок
 func (r *Router) SignUp(c *gin.Context) {
 	// берем данные из запроса

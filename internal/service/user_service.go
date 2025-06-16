@@ -17,20 +17,23 @@ import (
 type Role int
 
 const (
-	Default Role = iota
-	Admin
+	Default Role = iota // обычный пользователь
+	Admin               // администратор
 )
 
+// преобразуем роль в строку
 func (r Role) String() string {
 	return [...]string{"Default", "Admin"}[r]
 }
 
+// сервис для работы с пользователями
 type UserService struct {
 	config    *config.Config
 	repo      repository.UserRepository
 	validator *validator.Validator
 }
 
+// создаем новый сервис для работы с пользователями(конструктор)
 func NewUserService(cfg *config.Config, repo repository.UserRepository) *UserService {
 	return &UserService{
 		config:    cfg,
@@ -247,54 +250,62 @@ func (s *UserService) Role(userId uuid.UUID) (string, error) {
 	return Role(user.Role).String(), nil
 }
 
-// RefreshTokens обновляет токены пользователя
-// проверяет старый refresh токен и выдает новые токены
+/**
+общие понятия:
+- Access Token -- краткоживущий токен, используемый для аутентификации и авторизации пользователя
+- Refresh Token -- долгоживущий токен, позволяющий получить новый Access Token без повторной авторизации
+- cookie(как имя параметра метода) -- это строка, содержащая Refresh Token, переданная от клиента
+*/
+
+// RefreshTokens обновляет пару access/refresh токенов по переданному refresh token (cookie)
 func (s *UserService) RefreshTokens(cookie string) (string, string, error) {
-	// проверяем что токен валидный
+	// валидирует переданный токен с использованием refresh-ключа из токена
 	token, err := s.validator.ValidateToken(cookie, s.config.Jwt.RefreshKey)
 	if err != nil || !token.Valid {
-		return "", "", err
+		return "", "", err // если токен невалиден или возникла ошибка -- возвращается ошибка
 	}
 
-	// достаем почту из токена
+	// получает subject (обычно email) из токена
 	sub, err := token.Claims.GetSubject()
 	if err != nil || sub == "" {
-		return "", "", err
+		return "", "", err // ошибка получения subject или subject пустой
 	}
 
-	// ищем пользователя по почте
+	// получает пользователя по email (subject)
 	user, err := s.repo.GetUserByEmail(sub)
 	if err != nil {
-		return "", "", err
+		return "", "", err // ошибка получения пользователя из репозитория
 	}
 
-	// получаем данные пользователя
+	// получает дополнительные данные(фио, telegram и т д) пользователя по его ID
 	userData, err := s.repo.GetUserWithDataById(user.ID)
 	if err != nil {
-		return "", "", err
+		return "", "", err // ошибка получения данных
 	}
 
-	// проверяем что токен не был использован
+	// получает сущность пользователя с сохранённым refresh токеном (user.Auth.Key)
 	userEntity, err := s.repo.GetUserWithRefreshById(user.ID)
 	if err != nil {
-		return "", "", err
+		return "", "", err // ошибка получения записи из бд
 	}
 
+	// проверяет, совпадает ли переданный токен с сохранённым -- защита от повторного использования
 	if userEntity.Auth.Key != cookie {
 		return "", "", errors.New("this refresh token was already refreshed")
 	}
 
-	// создаем новые токены
+	// генерирует новую пару access и refresh токенов
 	access, refresh, err := s.generateTokens(userData.UserData.Email)
 	if err != nil {
-		return "", "", err
+		return "", "", err // ошибка генерации токенов
 	}
 
-	// обновляем refresh токен в базе
+	// обновляет сохранённый refresh токен в базе
 	if err := s.repo.UpdateToken(userEntity.ID, refresh); err != nil {
-		return "", "", err
+		return "", "", err // ошибка обновления токена в хранилище
 	}
 
+	// возвращает новую пару access и refresh токенов
 	return access, refresh, nil
 }
 

@@ -9,6 +9,8 @@ import (
 	"gorm.io/gorm"
 )
 
+// интерфейс для работы с курсами
+// определяет все методы которые нужны для работы с курсами в базе
 type CourseRepository interface {
 	GetCourses() ([]dto.CourseDto, error)
 	GetCourse(courseId uuid.UUID) (*dto.CourseDto, error)
@@ -28,11 +30,14 @@ type CourseRepository interface {
 	DeleteCourseAssignment(courseId uuid.UUID, userId uuid.UUID) error
 }
 
+// репозиторий для работы с курсами
+// реализует интерфейс CourseRepository
 type CourseRepo struct {
 	config *config.Config
 	DB     *gorm.DB
 }
 
+// создаем новый репозиторий для работы с курсами
 func NewCourseRepo(cfg *config.Config) *CourseRepo {
 	return &CourseRepo{
 		config: cfg,
@@ -55,17 +60,20 @@ func (r *CourseRepo) DeleteCourse(courseId uuid.UUID) error {
 // UpdateCourse обновляет информацию о курсе
 // меняет название описание и цену курса в базе
 func (r *CourseRepo) UpdateCourse(courseId uuid.UUID, updated *dto.UpdateCourseDto) error {
+	// начинаем транзакцию чтобы все изменения сохранились сразу и откатились в случае ошибки
 	tx := r.DB.Begin()
 	if tx.Error != nil {
 		return tx.Error
 	}
 
+	// получаем курс
 	var course entity.Course
 	if err := tx.Where("course_id = ?", courseId).First(&course).Error; err != nil {
 		tx.Rollback()
 		return err
 	}
 
+	// обновляем название и описание
 	course.Title = updated.Name
 	course.Desc = updated.Description
 
@@ -74,10 +82,11 @@ func (r *CourseRepo) UpdateCourse(courseId uuid.UUID, updated *dto.UpdateCourseD
 		return err
 	}
 
-	// Update or create price
+	// обновляем или создаем цену
 	var price entity.CoursePrice
 	if err := tx.Where("course_id = ?", courseId).First(&price).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
+			// если цены нет - создаем новую
 			price = entity.CoursePrice{
 				CourseID:     courseId,
 				Amount:       float64(updated.Price),
@@ -92,6 +101,7 @@ func (r *CourseRepo) UpdateCourse(courseId uuid.UUID, updated *dto.UpdateCourseD
 			return err
 		}
 	} else {
+		// если цена есть - обновляем
 		price.Amount = float64(updated.Price)
 		if err := tx.Save(&price).Error; err != nil {
 			tx.Rollback()

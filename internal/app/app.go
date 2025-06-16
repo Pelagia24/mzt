@@ -13,23 +13,28 @@ import (
 )
 
 func Run(cfg *config.Config) {
+	// создаем репозитории для работы с данными
 	userRepo := repository.NewUserRepo(cfg)
 	courseRepo := repository.NewCourseRepo(cfg)
 	eventRepo := repository.NewEventRepo(cfg)
 	paymentRepo := repository.NewPaymentRepo(cfg)
 
-	// Migrate(userRepo)
+	// запускаем миграции базы данных
 	migration.RunMigrations(cfg)
 
+	// создаем сервисы для бизнес логики
 	authService := service.NewUserService(cfg, userRepo)
 	courseService := service.NewCourseService(cfg, courseRepo)
 	paymentService := service.NewPaymentService(cfg, courseRepo, paymentRepo)
 	eventService := service.NewEventService(cfg, eventRepo, courseRepo)
 
+	// создаем middleware для обработки запросов
 	middleware := middleware.NewMiddleware(cfg, userRepo, courseRepo)
 
+	// создаем роутер
 	handler := gin.Default()
 
+	// настраиваем cors для работы с фронтендом
 	handler.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"http://localhost:5173", "http://localhost:8080", "http://127.0.0.1:5173", "http://127.0.0.1:8080", "https://c221-62-60-236-43.ngrok-free.app"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"},
@@ -39,7 +44,9 @@ func Run(cfg *config.Config) {
 		MaxAge:           12 * 60 * 60,
 	}))
 
+	// настраиваем все маршруты
 	router.NewRouter(cfg, handler, authService, courseService, paymentService, eventService, middleware)
+	// запускаем сервер на порту 8080
 	handler.Run(":8080")
 	//TODO server
 }

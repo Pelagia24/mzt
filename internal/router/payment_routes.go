@@ -22,7 +22,7 @@ func (r *Router) YooWebhookHandler(c *gin.Context) {
 		courseID := webhook.Object.Metadata.CourseID
 		paymentID := webhook.Object.Metadata.PaymentID
 
-		// Parse UUIDs
+		// преобразуем строки в uuid
 		userIDParsed, err := uuid.Parse(userID)
 		if err != nil {
 			//TODO handle this(i think log + notification somewhere)
@@ -42,14 +42,14 @@ func (r *Router) YooWebhookHandler(c *gin.Context) {
 			// Log but continue without payment update
 			// We should still assign the course
 		} else {
-			// Update payment status to succeeded
+			// обновляем статус платежа на успешный
 			err = r.paymentService.UpdatePaymentStatus(paymentIDParsed, "succeeded")
 			if err != nil {
 				// Log the error but continue with course assignment
 			}
 		}
 
-		// Assign user to course
+		// записываем пользователя на курс
 		err = r.courseService.AssignUserToCourse(courseIDParsed, userIDParsed)
 		if err != nil {
 			c.JSON(http.StatusOK, gin.H{"status": "ok"})
@@ -63,9 +63,13 @@ func (r *Router) YooWebhookHandler(c *gin.Context) {
 	}
 }
 
+// создает платеж для курса
+// возвращает ссылку на оплату
 func (r *Router) CreateCoursePayment(c *gin.Context) {
+	// достаем id курса из параметров запроса
 	courseId := c.Param("course_id")
 
+	// достаем id пользователя из контекста
 	user, ok := c.Get("self")
 	if !ok {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Can't get user ID"})
@@ -74,32 +78,40 @@ func (r *Router) CreateCoursePayment(c *gin.Context) {
 
 	userId := user.(uuid.UUID)
 
-	// Using empty amount since it will be retrieved from the database
+	// создаем платеж через сервис
+	// сумма будет получена из базы данных
 	result, err := r.paymentService.CreateYooKassaPayment(userId.String(), courseId, "")
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		return
 	}
+	// отправляем ссылку на оплату клиенту
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Payment initiated successfully",
 		"url":     result,
 	})
 }
 
+// получает список транзакций пользователя
+// доступно только админам
 func (r *Router) GetUserTransactions(c *gin.Context) {
+	// достаем id пользователя из параметров запроса
 	userID := c.Param("user_id")
 
+	// преобразуем строку в uuid
 	userIDParsed, err := uuid.Parse(userID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
 		return
 	}
 
+	// получаем список транзакций из сервиса
 	transactions, err := r.paymentService.GetUserTransactions(userIDParsed)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
+	// отправляем список транзакций клиенту
 	c.JSON(http.StatusOK, transactions)
 }
