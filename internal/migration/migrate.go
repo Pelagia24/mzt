@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"math/rand"
 	"mzt/config"
 	"mzt/internal/entity"
 	"mzt/internal/repository"
@@ -75,6 +76,12 @@ func RunMigrations(cfg *config.Config) error {
 		log.Printf("Warning: Failed to seed events: %v", err)
 	}
 
+	// Seed course assignments
+	err = seedCourseAssignments(userRepo, courseRepo)
+	if err != nil {
+		return fmt.Errorf("failed to seed course assignments: %v", err)
+	}
+
 	log.Println("Database migrations completed")
 	return nil
 }
@@ -125,7 +132,7 @@ func seedUsers(userRepo *repository.UserRepo) error {
 			user: &entity.User{
 				ID:         uuid.New(),
 				PasswdHash: string(passwordHash),
-				Role:       0, 
+				Role:       0,
 			},
 			userData: &entity.UserData{
 				Email:           "ivan@example.com",
@@ -834,7 +841,7 @@ func seedUserTransactions(userRepo *repository.UserRepo, courseRepo *repository.
 		}
 
 		// Для каждого пользователя создаем 2-3 транзакции
-		numTransactions := 2 + (user.ID.String()[0] % 2) 
+		numTransactions := 2 + (user.ID.String()[0] % 2)
 
 		for i := 0; i < int(numTransactions); i++ {
 			course := courses[i%len(courses)]
@@ -880,6 +887,90 @@ func seedUserTransactions(userRepo *repository.UserRepo, courseRepo *repository.
 			if err != nil {
 				log.Printf("Warning: Failed to process transaction for user %s: %v", user.ID, err)
 				continue
+			}
+		}
+	}
+
+	return nil
+}
+
+func seedCourseAssignments(userRepo *repository.UserRepo, courseRepo *repository.CourseRepo) error {
+	// Get all users and courses
+	users, err := userRepo.GetUsers()
+	if err != nil {
+		return fmt.Errorf("failed to get users: %v", err)
+	}
+	log.Printf("Found %d users", len(users))
+
+	courses, err := courseRepo.GetCourses()
+	if err != nil {
+		return fmt.Errorf("failed to get courses: %v", err)
+	}
+	log.Printf("Found %d courses", len(courses))
+
+	// Create a map of course titles to IDs
+	courseMap := make(map[string]uuid.UUID)
+	for _, course := range courses {
+		courseMap[course.Name] = course.CourseID
+	}
+
+	// Assign courses to users
+	for _, user := range users {
+		log.Printf("Processing user %s with role %d", user.ID, user.Role)
+
+		// Admin gets all courses
+		if user.Role == 1 {
+			log.Printf("User %s is admin, assigning all courses", user.ID)
+			for _, course := range courses {
+				// Check if assignment already exists
+				existingAssignment, err := courseRepo.GetCourseAssignment(course.CourseID, user.ID)
+				if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+					log.Printf("Error checking existing assignment for admin %s and course %s: %v", user.ID, course.Name, err)
+					continue
+				}
+
+				if existingAssignment != nil {
+					log.Printf("Assignment already exists for admin %s and course %s", user.ID, course.Name)
+					continue
+				}
+
+				assignment := &entity.CourseAssignment{
+					CaID:     uuid.New(),
+					UserID:   user.ID,
+					CourseID: course.CourseID,
+					Progress: 0,
+				}
+				err = courseRepo.CreateCourseAssignment(assignment)
+				if err != nil {
+					log.Printf("Warning: Failed to create course assignment for admin %s and course %s: %v", user.ID, course.Name, err)
+				} else {
+					log.Printf("Successfully created course assignment for admin %s and course %s", user.ID, course.Name)
+				}
+			}
+			continue
+		}
+
+		// Regular users get random courses
+		numCourses := rand.Intn(4) + 2 // 2-5 courses per user
+		availableCourses := make([]uuid.UUID, len(courses))
+		for i, course := range courses {
+			availableCourses[i] = course.CourseID
+		}
+		rand.Shuffle(len(availableCourses), func(i, j int) {
+			availableCourses[i], availableCourses[j] = availableCourses[j], availableCourses[i]
+		})
+
+		for i := 0; i < numCourses && i < len(availableCourses); i++ {
+			progress := uint(rand.Intn(101)) // Random progress 0-100
+			assignment := &entity.CourseAssignment{
+				CaID:     uuid.New(),
+				UserID:   user.ID,
+				CourseID: availableCourses[i],
+				Progress: progress,
+			}
+			err = courseRepo.CreateCourseAssignment(assignment)
+			if err != nil {
+				log.Printf("Warning: Failed to create course assignment for user %s and course %s: %v", user.ID, courses[i].Name, err)
 			}
 		}
 	}
