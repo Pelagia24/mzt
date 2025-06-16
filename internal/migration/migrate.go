@@ -615,6 +615,7 @@ func seedEvents(eventRepo *repository.EventRepo, courseRepo *repository.CourseRe
 	}
 
 	events := []*entity.Event{
+		// Мужское лидерство и харизма
 		{
 			EventID:     uuid.New(),
 			CourseID:    courseMap["Мужское лидерство и харизма"],
@@ -625,75 +626,164 @@ func seedEvents(eventRepo *repository.EventRepo, courseRepo *repository.CourseRe
 		},
 		{
 			EventID:     uuid.New(),
+			CourseID:    courseMap["Мужское лидерство и харизма"],
+			Title:       "Практикум по развитию харизмы",
+			Description: "Интенсивный практикум по развитию харизмы и лидерских качеств",
+			EventDate:   time.Now().Add(72 * time.Hour),
+			SecretInfo:  "Google Meet: meet.google.com/charisma-workshop",
+		},
+		// Бизнес-сообщество и нетворкинг
+		{
+			EventID:     uuid.New(),
 			CourseID:    courseMap["Бизнес-сообщество и нетворкинг"],
 			Title:       "Создание сильного бизнес-сообщества",
 			Description: "Стратегии построения и развития бизнес-сообщества. Эффективные практики нетворкинга",
-			EventDate:   time.Now().Add(72 * time.Hour),
+			EventDate:   time.Now().Add(96 * time.Hour),
 			SecretInfo:  "Google Meet: meet.google.com/networking-2024",
 		},
+		{
+			EventID:     uuid.New(),
+			CourseID:    courseMap["Бизнес-сообщество и нетворкинг"],
+			Title:       "Нетворкинг-митап",
+			Description: "Практический нетворкинг-митап с успешными предпринимателями",
+			EventDate:   time.Now().Add(120 * time.Hour),
+			SecretInfo:  "Discord: discord.gg/networking-meetup",
+		},
+		// Мужская психология и эмоциональный интеллект
 		{
 			EventID:     uuid.New(),
 			CourseID:    courseMap["Мужская психология и эмоциональный интеллект"],
 			Title:       "Эмоциональный интеллект в бизнесе",
 			Description: "Развитие эмоционального интеллекта и психологической устойчивости. Управление эмоциями в деловой среде",
-			EventDate:   time.Now().Add(96 * time.Hour),
+			EventDate:   time.Now().Add(144 * time.Hour),
 			SecretInfo:  "Discord: discord.gg/eq-business",
 		},
+		{
+			EventID:     uuid.New(),
+			CourseID:    courseMap["Мужская психология и эмоциональный интеллект"],
+			Title:       "Психология успеха",
+			Description: "Психологические аспекты достижения успеха в бизнесе",
+			EventDate:   time.Now().Add(168 * time.Hour),
+			SecretInfo:  "Zoom Meeting ID: 987-654-321, Password: success2024",
+		},
+		// Стратегическое мышление и принятие решений
 		{
 			EventID:     uuid.New(),
 			CourseID:    courseMap["Стратегическое мышление и принятие решений"],
 			Title:       "Стратегическое мышление в бизнесе",
 			Description: "Развитие стратегического мышления и навыков принятия решений. Анализ рисков и возможностей",
-			EventDate:   time.Now().Add(120 * time.Hour),
-			SecretInfo:  "Zoom Meeting ID: 987-654-321, Password: strategy2024",
+			EventDate:   time.Now().Add(192 * time.Hour),
+			SecretInfo:  "Zoom Meeting ID: 456-789-012, Password: strategy2024",
 		},
+		{
+			EventID:     uuid.New(),
+			CourseID:    courseMap["Стратегическое мышление и принятие решений"],
+			Title:       "Кейс-стади: принятие сложных решений",
+			Description: "Разбор реальных бизнес-кейсов и стратегий принятия решений",
+			EventDate:   time.Now().Add(216 * time.Hour),
+			SecretInfo:  "Google Meet: meet.google.com/case-studies",
+		},
+		// Мужская эффективность и тайм-менеджмент
 		{
 			EventID:     uuid.New(),
 			CourseID:    courseMap["Мужская эффективность и тайм-менеджмент"],
 			Title:       "Повышение личной эффективности",
 			Description: "Техники тайм-менеджмента и повышения личной эффективности. Приоритизация и планирование",
-			EventDate:   time.Now().Add(144 * time.Hour),
+			EventDate:   time.Now().Add(240 * time.Hour),
 			SecretInfo:  "Google Meet: meet.google.com/efficiency-2024",
 		},
+		{
+			EventID:     uuid.New(),
+			CourseID:    courseMap["Мужская эффективность и тайм-менеджмент"],
+			Title:       "Мастер-класс по тайм-менеджменту",
+			Description: "Практический мастер-класс по эффективному управлению временем",
+			EventDate:   time.Now().Add(264 * time.Hour),
+			SecretInfo:  "Discord: discord.gg/time-management",
+		},
+		// Бизнес-переговоры и убеждение
 		{
 			EventID:     uuid.New(),
 			CourseID:    courseMap["Бизнес-переговоры и убеждение"],
 			Title:       "Искусство бизнес-переговоров",
 			Description: "Техники ведения переговоров и убеждения. Достижение взаимовыгодных соглашений",
-			EventDate:   time.Now().Add(168 * time.Hour),
+			EventDate:   time.Now().Add(288 * time.Hour),
 			SecretInfo:  "Discord: discord.gg/negotiations",
 		},
+		{
+			EventID:     uuid.New(),
+			CourseID:    courseMap["Бизнес-переговоры и убеждение"],
+			Title:       "Ролевая игра: сложные переговоры",
+			Description: "Практическая отработка навыков ведения сложных переговоров",
+			EventDate:   time.Now().Add(312 * time.Hour),
+			SecretInfo:  "Zoom Meeting ID: 789-012-345, Password: negotiations2024",
+		},
+		// Мужское сообщество и менторство
 		{
 			EventID:     uuid.New(),
 			CourseID:    courseMap["Мужское сообщество и менторство"],
 			Title:       "Менторство в бизнес-сообществе",
 			Description: "Развитие менторских навыков и создание поддерживающего сообщества. Передача опыта и знаний",
-			EventDate:   time.Now().Add(192 * time.Hour),
-			SecretInfo:  "Zoom Meeting ID: 456-789-012, Password: mentor2024",
+			EventDate:   time.Now().Add(336 * time.Hour),
+			SecretInfo:  "Zoom Meeting ID: 321-654-987, Password: mentor2024",
 		},
+		{
+			EventID:     uuid.New(),
+			CourseID:    courseMap["Мужское сообщество и менторство"],
+			Title:       "Менторская сессия",
+			Description: "Индивидуальные менторские сессии с опытными предпринимателями",
+			EventDate:   time.Now().Add(360 * time.Hour),
+			SecretInfo:  "Google Meet: meet.google.com/mentorship",
+		},
+		// Личный бренд и репутация
 		{
 			EventID:     uuid.New(),
 			CourseID:    courseMap["Личный бренд и репутация"],
 			Title:       "Построение личного бренда",
 			Description: "Создание и развитие сильного личного бренда. Управление репутацией в бизнесе",
-			EventDate:   time.Now().Add(216 * time.Hour),
+			EventDate:   time.Now().Add(384 * time.Hour),
 			SecretInfo:  "Google Meet: meet.google.com/personal-brand",
 		},
+		{
+			EventID:     uuid.New(),
+			CourseID:    courseMap["Личный бренд и репутация"],
+			Title:       "Мастер-класс по управлению репутацией",
+			Description: "Практические инструменты управления репутацией в бизнесе",
+			EventDate:   time.Now().Add(408 * time.Hour),
+			SecretInfo:  "Discord: discord.gg/reputation-management",
+		},
+		// Мужское здоровье и энергия
 		{
 			EventID:     uuid.New(),
 			CourseID:    courseMap["Мужское здоровье и энергия"],
 			Title:       "Управление энергией и здоровьем",
 			Description: "Техники управления энергией и стрессом. Поддержание здоровья для максимальной эффективности",
-			EventDate:   time.Now().Add(240 * time.Hour),
+			EventDate:   time.Now().Add(432 * time.Hour),
 			SecretInfo:  "Discord: discord.gg/health-energy",
 		},
+		{
+			EventID:     uuid.New(),
+			CourseID:    courseMap["Мужское здоровье и энергия"],
+			Title:       "Воркшоп по энергетическим практикам",
+			Description: "Практический воркшоп по энергетическим практикам для бизнесменов",
+			EventDate:   time.Now().Add(456 * time.Hour),
+			SecretInfo:  "Zoom Meeting ID: 654-321-987, Password: energy2024",
+		},
+		// Бизнес-этика и ценности
 		{
 			EventID:     uuid.New(),
 			CourseID:    courseMap["Бизнес-этика и ценности"],
 			Title:       "Бизнес-этика и социальная ответственность",
 			Description: "Формирование сильных бизнес-ценностей. Этичное ведение бизнеса и социальная ответственность",
-			EventDate:   time.Now().Add(264 * time.Hour),
+			EventDate:   time.Now().Add(480 * time.Hour),
 			SecretInfo:  "Zoom Meeting ID: 789-012-345, Password: ethics2024",
+		},
+		{
+			EventID:     uuid.New(),
+			CourseID:    courseMap["Бизнес-этика и ценности"],
+			Title:       "Дискуссия: ценности в современном бизнесе",
+			Description: "Открытая дискуссия о ценностях и этике в современном бизнесе",
+			EventDate:   time.Now().Add(504 * time.Hour),
+			SecretInfo:  "Google Meet: meet.google.com/business-values",
 		},
 	}
 

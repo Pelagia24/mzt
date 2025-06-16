@@ -186,34 +186,29 @@ func (r *Router) Me(c *gin.Context) {
 	})
 }
 
-// @Summary Sign in user
-// @Description Sign in user
-// @Tags User
-// @Accept json
-// @Produce json
-// @Param user body dto.LoginDto true "User login info"
-// @Success 200 {object} map[string]interface{}
-// @Failure 400 {object} map[string]interface{}
-// @Failure 401 {object} map[string]interface{}
-// @Failure 500 {object} map[string]interface{}
-// @Router /auth/signin [post]
+// SignIn обрабатывает вход пользователя
+// проверяет почту и пароль и выдает токены если все ок
 func (r *Router) SignIn(c *gin.Context) {
+	// берем данные из запроса
 	var payload dto.LoginDto
 	if err := c.ShouldBindJSON(&payload); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
+	// проверяем что почта правильная
 	if !r.validator.IsValidEmail(payload.Email) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid email"})
 		return
 	}
 
+	// проверяем что пароль достаточно сложный
 	if !r.validator.IsValidPassword(payload.Password) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Password is weak or contains incorrect symbols"})
 		return
 	}
 
+	// пытаемся войти и получить токены
 	access, refresh, err := r.authService.SignIn(&payload)
 
 	if err != nil {
@@ -221,20 +216,24 @@ func (r *Router) SignIn(c *gin.Context) {
 		return
 	}
 
+	// получаем id пользователя по почте
 	id, err := r.authService.GetUserId(payload.Email)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
 	}
 
+	// узнаем роль пользователя админ он или нет
 	role, err := r.authService.Role(id)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
 	}
 
+	// сохраняем refresh токен в куки
 	c.SetCookie("refresh_token", refresh, int(r.config.Jwt.RefreshExpiresIn.Seconds()), "/", r.config.Jwt.Domain, false, true)
 
+	// отправляем ответ с токенами и данными пользователя
 	c.JSON(http.StatusOK, gin.H{
 		"message":      "User signed in successfully",
 		"access_token": access,
@@ -243,48 +242,47 @@ func (r *Router) SignIn(c *gin.Context) {
 	})
 }
 
-// @Summary Sign up user
-// @Description Sign up user
-// @Tags User
-// @Accept json
-// @Produce json
-// @Param user body dto.RegistrationDto true "User to create"
-// @Success 201 {object} map[string]interface{}
-// @Failure 400 {object} map[string]interface{}
-// @Failure 500 {object} map[string]interface{}
-// @Router /auth/signup [post]
+// SignUp регистрирует нового пользователя
+// проверяет все поля и создает аккаунт если все ок
 func (r *Router) SignUp(c *gin.Context) {
+	// берем данные из запроса
 	var payload dto.RegistrationDto
 	if err := c.ShouldBindJSON(&payload); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
+	// проверяем что почта правильная
 	if !r.validator.IsValidEmail(payload.Email) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid email"})
 		return
 	}
 
+	// проверяем что пароль достаточно сложный
 	if !r.validator.IsValidPassword(payload.Password) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid password"})
 		return
 	}
 
+	// проверяем что имя нормальное
 	if !r.validator.IsValidName(payload.Name) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid name"})
 		return
 	}
 
+	// проверяем что телефон правильный
 	if !r.validator.IsValidPhoneNumber(payload.PhoneNumber) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid phone number"})
 		return
 	}
 
+	// проверяем что телеграм правильный
 	if !r.validator.IsValidTelegram(payload.Telegram) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid telegram"})
 		return
 	}
 
+	// создаем пользователя и получаем токены
 	access, refresh, err := r.authService.SignUp(&payload)
 
 	if err != nil {
@@ -292,20 +290,24 @@ func (r *Router) SignUp(c *gin.Context) {
 		return
 	}
 
+	// получаем id нового пользователя
 	id, err := r.authService.GetUserId(payload.Email)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
 	}
 
+	// узнаем роль пользователя админ он или нет
 	role, err := r.authService.Role(id)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
 	}
 
+	// сохраняем refresh токен в куки
 	c.SetCookie("refresh_token", refresh, int(r.config.Jwt.RefreshExpiresIn.Seconds()), "/", r.config.Jwt.Domain, false, true)
 
+	// отправляем ответ с токенами и данными пользователя
 	c.JSON(http.StatusCreated, gin.H{
 		"message":      "User created successfully",
 		"access_token": access,
@@ -314,78 +316,74 @@ func (r *Router) SignUp(c *gin.Context) {
 	})
 }
 
-// @Summary Refresh tokens
-// @Description Refresh tokens
-// @Tags User
-// @Accept json
-// @Produce json
-// @Success 200 {object} map[string]interface{}
-// @Failure 401 {object} map[string]interface{}
-// @Failure 500 {object} map[string]interface{}
-// @Router /auth/refresh [post]
+// Refresh обновляет токены пользователя
+// берет refresh токен из куки и выдает новые токены
 func (r *Router) Refresh(c *gin.Context) {
+	// достаем refresh токен из куки
 	token, err := c.Cookie("refresh_token")
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
 	}
+
+	// получаем новые токены
 	access, refresh, err := r.authService.RefreshTokens(token)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
 	}
 
-	//after validation
+	// проверяем что токен валидный
 	parsed, err := r.validator.ValidateToken(token, r.config.Jwt.RefreshKey)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
 	}
 
+	// достаем почту из токена
 	sub, err := parsed.Claims.GetSubject()
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
 	}
 
+	// получаем id пользователя по почте
 	id, err := r.authService.GetUserId(sub)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
 	}
 
+	// узнаем роль пользователя админ он или нет
 	role, err := r.authService.Role(id)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
 	}
 
+	// сохраняем новый refresh токен в куки
 	c.SetCookie("refresh_token", refresh, int(r.config.Jwt.RefreshExpiresIn.Seconds()), "/", r.config.Jwt.Domain, false, true)
 
+	// отправляем ответ с новыми токенами и данными пользователя
 	c.JSON(http.StatusOK, gin.H{
 		"message":      "Tokens refreshed successfully",
 		"access_token": access,
 		"id":           id,
 		"role":         role,
 	})
-
 }
 
-// @Summary Logout user
-// @Description Logout user and invalidate refresh token
-// @Tags User
-// @Accept json
-// @Produce json
-// @Success 200 {object} map[string]interface{}
-// @Failure 500 {object} map[string]interface{}
-// @Router /auth/logout [post]
+// Logout выходит из аккаунта
+// удаляет refresh токен и очищает куки
 func (r *Router) Logout(c *gin.Context) {
+	// достаем id пользователя из контекста
 	user, ok := c.Get("self")
 	if !ok {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not found"})
 		return
 	}
 
+	// удаляем refresh токен из базы
 	userId := user.(uuid.UUID)
 	err := r.authService.Logout(userId)
 	if err != nil {
@@ -393,6 +391,7 @@ func (r *Router) Logout(c *gin.Context) {
 		return
 	}
 
+	// очищаем куки с refresh токеном
 	c.SetCookie("refresh_token", "", -1, "/", r.config.Jwt.Domain, false, true)
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Logged out successfully",

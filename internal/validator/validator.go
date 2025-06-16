@@ -10,10 +10,14 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
+// Validator проверяет данные(формат тг, емэйла, пароля и т.д.) и создает токены
+// содержит функции для валидации и работы с jwt токенами
 type Validator struct {
 	validate *validator.Validate
 }
 
+// NewValidator создает новый валидатор
+// просто возвращает новый экземпляр валидатора
 func NewValidator() *Validator {
 	return &Validator{validate: validator.New()}
 }
@@ -22,6 +26,8 @@ func (v *Validator) Validate(i interface{}) error {
 	return v.validate.Struct(i)
 }
 
+// IsValidEmail проверяет что почта правильная
+// проверяет формат почты
 func (v *Validator) IsValidEmail(email string) bool {
 	const emailRegex = `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
 	re := regexp.MustCompile(emailRegex)
