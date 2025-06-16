@@ -3,6 +3,7 @@ package app
 import (
 	"mzt/config"
 	"mzt/internal/middleware"
+	"mzt/internal/migration"
 	"mzt/internal/repository"
 	"mzt/internal/router"
 	"mzt/internal/service"
@@ -17,7 +18,8 @@ func Run(cfg *config.Config) {
 	eventRepo := repository.NewEventRepo(cfg)
 	paymentRepo := repository.NewPaymentRepo(cfg)
 
-	Migrate(userRepo)
+	// Migrate(userRepo)
+	migration.RunMigrations(cfg)
 
 	authService := service.NewUserService(cfg, userRepo)
 	courseService := service.NewCourseService(cfg, courseRepo)

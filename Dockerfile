@@ -14,7 +14,7 @@ FROM alpine:latest
 
 WORKDIR /app
 
-RUN apk --no-cache add ca-certificates tzdata netcat-openbsd
+#RUN apk --no-cache add ca-certificates tzdata netcat-openbsd
 
 COPY --from=builder /app/mzt-api .
 

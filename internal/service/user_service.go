@@ -8,6 +8,8 @@ import (
 	"mzt/internal/repository"
 	"mzt/internal/validator"
 
+	"time"
+
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -178,6 +180,10 @@ func (s *UserService) GetUser(userId uuid.UUID) (*dto.UserInfoAdminDto, error) {
 }
 
 func (s *UserService) UpdateUser(userId uuid.UUID, updated *dto.UpdateUserDto) error {
+	// Calculate age if birthdate is being updated
+	age := time.Since(updated.Birthdate).Hours() / 24 / 365.25
+	updated.Age = uint(age)
+
 	updatedEnity := &entity.UserData{
 		UserID:          userId,
 		Name:            updated.Name,
